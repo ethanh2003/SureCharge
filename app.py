@@ -137,15 +137,21 @@ def setDarkMode():
 
 
 readData()
-setDarkMode()
+
 window = QWidget()  # Create a window.
 layout = QVBoxLayout()  # Create a layout.
-
+product_buttons = []
 button = QPushButton("Exit")  # Define a button
-
 button.clicked.connect(exit)
-layout.addWidget(QLabel('Hello World!'))  # Add a label
-layout.addWidget(button)  # Add the button man
+sale_items = []
+def orderScreen():
+    for products in product_list:
+        product_buttons.append(QPushButton(products.name+"\n$"+products.price))
+    layout.addWidget(QLabel('Order'))  # Add a label
+    layout.addWidget(button)  # Add the button man
+    for buttons in product_buttons:
+        layout.addWidget(buttons)
+        button.clicked.connect()
 
 window.setLayout(layout)  # Pass the layout to the window
 window.show()  # Show window
