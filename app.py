@@ -141,7 +141,6 @@ def setDarkMode():
 readData()
 
 window = QWidget()  # Create a window.
-# layout = QVBoxLayout()  # Create a layout.
 product_buttons = []
 sale_items = []
 layout = QHBoxLayout()
