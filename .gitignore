@@ -1,4 +1,7 @@
 # created by virtualenv automatically
-\venv
-\.idea
-\Lib
+.idea
+venv
+Lib
+Scripts
+pyvenv.cfg
+.idea/
