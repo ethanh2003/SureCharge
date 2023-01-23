@@ -1,0 +1,5 @@
+product_id,name,price,costToMake,tax
+0,16oz drip,2.99,1,0.07
+1,12oz drip,2,1,0.07
+2,16oz latte,4.5,1,0.07
+3,12oz latte,4,1,0.07

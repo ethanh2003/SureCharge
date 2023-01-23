@@ -1,0 +1,2 @@
+user_id,name,pin,accessLevel,payrate,hoursWorked,clock_in
+1,Admin,9999,0,20,0,0
