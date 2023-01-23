@@ -4,7 +4,6 @@ import csv
 from Classes import *
 from datetime import datetime
 
-
 user_list = []
 product_list = []
 sale_records = []
@@ -12,15 +11,18 @@ giftCards = []
 
 app = QApplication([])  # Start an application.
 
+
 def clockOut(user):
     clock_in_time = datetime.strptime(user.clock_in, '%H:%M')
     hoursWorked = datetime.now() - clock_in_time
     hoursWorked = round(hoursWorked.total_seconds() / 3600)
     user.hoursWorked += hoursWorked
 
+
 def exitApp():
     app.exit
     saveData()
+
 
 def saveData():
     with open('csv_files/user_file.csv', mode='w', newline='') as user_file:
@@ -139,20 +141,34 @@ def setDarkMode():
 readData()
 
 window = QWidget()  # Create a window.
-layout = QVBoxLayout()  # Create a layout.
+# layout = QVBoxLayout()  # Create a layout.
 product_buttons = []
-button = QPushButton("Exit")  # Define a button
-button.clicked.connect(exit)
 sale_items = []
+layout = QHBoxLayout()
+exit_button = QPushButton("Exit")  # Define a button
+exit_button.clicked.connect(exit)
+layout.addWidget(exit_button)
+def homeScreen():
+    layout.addWidget(QLabel('Pin:'))  # Add a label
+    pin = QLineEdit()
+    Clock_in_button = QPushButton("Clock in/out")  # Define a button
+    Clock_in_button.clicked.connect(homeScreen)
+    Sign_in_button = QPushButton("Sign In")  # Define a button
+    Sign_in_button.clicked.connect(orderScreen)
+    layout.addWidget(pin)
+    layout.addWidget(Sign_in_button)
+    layout.addWidget(Clock_in_button)
+
+
+
 def orderScreen():
     for products in product_list:
-        product_buttons.append(QPushButton(products.name+"\n$"+products.price))
-    layout.addWidget(QLabel('Order'))  # Add a label
-    layout.addWidget(button)  # Add the button man
+        product_buttons.append(QPushButton(products.name + "\n$" + products.price))
     for buttons in product_buttons:
         layout.addWidget(buttons)
-        button.clicked.connect()
 
-window.setLayout(layout)  # Pass the layout to the window
+
+homeScreen()
+window.setLayout(layout)
 window.show()  # Show window
 app.exec_()  # Execute the App
