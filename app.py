@@ -1,15 +1,18 @@
-from PySide2.QtGui import *
-from PySide2.QtWidgets import *
+import tkinter as tk
+from tkinter import *
 import csv
+from tkinter import ttk
+
 from Classes import *
+from functools import partial
+import tkinter.messagebox
 from datetime import datetime
 
 user_list = []
 product_list = []
 sale_records = []
 giftCards = []
-
-app = QApplication([])  # Start an application.
+currentUser = None
 
 
 def clockOut(user):
@@ -17,11 +20,6 @@ def clockOut(user):
     hoursWorked = datetime.now() - clock_in_time
     hoursWorked = round(hoursWorked.total_seconds() / 3600)
     user.hoursWorked += hoursWorked
-
-
-def exitApp():
-    app.exit
-    saveData()
 
 
 def saveData():
@@ -115,59 +113,55 @@ def readData():
             giftCards.append(GiftCard(row[0], row[1], row[2]))
 
 
-def setLightMode():
-    default_palette = QPalette()
-
-
-def setDarkMode():
-    app.setStyle('Fusion')
-    dark_palette = QPalette()
-    dark_palette.setColor(QPalette.Window, QColor(53, 53, 53))
-    dark_palette.setColor(QPalette.WindowText, Qt.white)
-    dark_palette.setColor(QPalette.Base, QColor(25, 25, 25))
-    dark_palette.setColor(QPalette.AlternateBase, QColor(53, 53, 53))
-    dark_palette.setColor(QPalette.ToolTipBase, Qt.white)
-    dark_palette.setColor(QPalette.ToolTipText, Qt.white)
-    dark_palette.setColor(QPalette.Text, Qt.white)
-    dark_palette.setColor(QPalette.Button, QColor(53, 53, 53))
-    dark_palette.setColor(QPalette.ButtonText, Qt.white)
-    dark_palette.setColor(QPalette.BrightText, Qt.red)
-    dark_palette.setColor(QPalette.Link, QColor(42, 130, 218))
-    dark_palette.setColor(QPalette.Highlight, QColor(42, 130, 218))
-    dark_palette.setColor(QPalette.HighlightedText, Qt.black)
-    app.setPalette(dark_palette)
-
-
+top = tk.Tk()
+top.title("Welcome to SureCharge")
+top.geometry("380x400")
 readData()
-
-window = QWidget()  # Create a window.
-product_buttons = []
+saveData()
 sale_items = []
-layout = QHBoxLayout()
-exit_button = QPushButton("Exit")  # Define a button
-exit_button.clicked.connect(exit)
-layout.addWidget(exit_button)
+
+
+def addToSale(product):
+    sale_items.append(product)
+
+
+def printSale():
+    total = 0.0
+    for items in sale_items:
+        total = float(total) + float(items.price)
+
+
+
+def signin(en):
+    pin = en.get()
+    print(pin)
+    global currentUser
+    found = False
+    for user in user_list:
+        if int(user.pin) == int(pin):
+            currentUser = user
+            found = True
+            salesScreen()
+    if not found:
+        tk.messagebox.showwarning("Invalid Pin", "Invalid Pin")
+
 def homeScreen():
-    layout.addWidget(QLabel('Pin:'))  # Add a label
-    pin = QLineEdit()
-    Clock_in_button = QPushButton("Clock in/out")  # Define a button
-    Clock_in_button.clicked.connect(homeScreen)
-    Sign_in_button = QPushButton("Sign In")  # Define a button
-    Sign_in_button.clicked.connect(orderScreen)
-    layout.addWidget(pin)
-    layout.addWidget(Sign_in_button)
-    layout.addWidget(Clock_in_button)
+    L1 = Label(top, text="Pin")
+    L1.pack(side=LEFT)
+    E1 = Entry(top)
+    E1.pack()
+    SigninB = tk.Button(top, text="Sign In", command=partial(signin, E1))
+    SigninB.pack()
 
 
-
-def orderScreen():
-    for products in product_list:
-        product_buttons.append(QPushButton(products.name + "\n$" + products.price))
-    for buttons in product_buttons:
-        layout.addWidget(buttons)
+def salesScreen():
+    for product in product_list:
+        button = tk.Button(top, text=product.name + "\n$" + product.price,
+                           command=partial(addToSale, product))
+        button.pack()
+    B = tk.Button(top, text="Total", command=printSale)
+    B.pack()
 
 
 homeScreen()
-window.setLayout(layout)
-window.show()  # Show window
-app.exec_()  # Execute the App
+top.mainloop()

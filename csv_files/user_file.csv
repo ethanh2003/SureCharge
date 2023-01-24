@@ -1,2 +1,2 @@
-user_id,name,pin,accessLevel,payrate,hoursWorked,clock_in
+user_id,name,pin,accessLevel,payrate,hoursWorked,clock-in
 1,Admin,9999,0,20,0,0
