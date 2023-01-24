@@ -11,12 +11,11 @@ class User:
 
 
 class Product:
-    def __init__(self, product_id, name, price, costToMake, tax):
+    def __init__(self, product_id, name, price, costToMake):
         self.product_id = product_id
         self.name = name
         self.price = price
         self.costToMake = costToMake
-        self.tax = tax
 
 
 class Sale:
