@@ -3,7 +3,4 @@ product_id,name,price,costToMake,tax
 1,12oz drip,2,1
 2,16oz latte,4.5,1
 3,12oz latte,4,1
-0,16oz drip,2.99,1
-1,12oz drip,2,1
-2,16oz latte,4.5,1
-3,12oz latte,4,1
+4,BYOC Discount,-.50,.50
