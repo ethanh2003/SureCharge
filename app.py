@@ -12,7 +12,7 @@ product_list = []
 sale_records = []
 stored_sale = None
 currentUser = None
-drawer = cashDrawer(0,0,0,0,0,0,0,0,0)
+drawer = cashDrawer(0, 0, 0, 0, 0, 0, 0, 0, 0)
 
 top = tk.Tk()
 top.title("Welcome to SureCharge")
@@ -22,6 +22,7 @@ sale_items = []
 discounts_Applied = 0
 discount_Record = []
 screens = []
+categories = []
 # Frames for switching screens
 homeScrn = Frame(top)
 saleScrn = Frame(top)
@@ -31,6 +32,8 @@ editUserScrn = Frame(top)
 editSingleUserScrn = Frame(top)
 addProductScrn = Frame(top)
 editProductScrn = Frame(top)
+addCategoryScrn = Frame(top)
+editCategoryScrn = Frame(top)
 
 screens.append(homeScrn)
 screens.append(saleScrn)
@@ -40,6 +43,8 @@ screens.append(editUserScrn)
 screens.append(editSingleUserScrn)
 screens.append(addProductScrn)
 screens.append(editProductScrn)
+screens.append(addCategoryScrn)
+screens.append(editCategoryScrn)
 
 
 def saveData():
@@ -52,14 +57,20 @@ def saveData():
             user_writer.writerow(
                 (user.user_id, user.name, user.pin, user.accessLevel, user.payrate, user.hoursWorked, user.clock_in))
     with open('csv_files/product_file.csv', mode='w', newline='') as product_file:
-        fieldnames = ['product_id', 'name', 'price', 'costToMake', 'disabled']
+        fieldnames = ['product_id', 'name', 'price', 'costToMake', 'disabled', 'groundsUsed', 'milkUsed', 'syrupUsed',
+                      'category']
 
         product_writer = csv.writer(product_file)
         product_writer.writerow(fieldnames)
         for product in product_list:
             product_writer.writerow(
-                (product.product_id, product.name, product.price, product.costToMake, product.disabled))
+                (product.product_id, product.name, product.price, product.costToMake, product.disabled,
+                 product.groundsUsed, product.milkUsed, product.syrupUsed, product.category))
+    with open('csv_files/categories.csv', mode='w',newline='') as categories_file:
 
+        categories_writer = csv.writer(categories_file)
+        for category in categories:
+            categories_writer.writerow(category)
     with open('csv_files/discounts_file.csv', mode='w', newline='') as discounts_file:
         fieldnames = ['amount', 'type', 'employee', 'reason']
 
@@ -78,7 +89,7 @@ def saveData():
                                    sale.paymentAmount, sale.tax, sale.discount))
     with open('csv_files/drawer.csv', mode='w', newline='') as drawer_file:
         fieldnames = ['startingTotal', 'CurrentBalance', 'cashSales', 'cardSales', 'Discounts', 'Paidin', 'Paidouts',
-                      'Refunds','tax']
+                      'Refunds', 'tax']
 
         drawer_writer = csv.writer(drawer_file)
         drawer_writer.writerow(fieldnames)
@@ -100,6 +111,12 @@ def readData():
             rows.append(row)
         for row in rows:
             user_list.append(User(row[0], row[1], row[2], row[3], row[4], row[5], row[6]))
+
+    with open('csv_files/categories.csv', 'r') as csvfile:
+        csvreader = csv.reader(csvfile)
+        for row in csvreader:
+            categories.append(row)
+
     with open('csv_files/product_file.csv', 'r') as csvfile:
         # creating a csv reader object
         csvreader = csv.reader(csvfile)
@@ -112,7 +129,7 @@ def readData():
         for row in csvreader:
             rows.append(row)
         for row in rows:
-            product_list.append(Product(row[0], row[1], row[2], row[3], row[4]))
+            product_list.append(Product(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]))
     with open('csv_files/sales_file.csv', 'r') as csvfile:
         # creating a csv reader object
         csvreader = csv.reader(csvfile)
@@ -160,6 +177,7 @@ def readData():
             drawer.Paidouts = row[6]
             drawer.Refunds = row[7]
             drawer.tax = row[8]
+
 
 readData()
 saveData()
@@ -269,10 +287,10 @@ def cashSale(total, tax, discount, newWindow):
     global currentUser
 
     item_list = ''
-    drawer.cashSales = drawer.cashSales+total
-    drawer.CurrentBalance = drawer.CurrentBalance+total
+    drawer.cashSales = drawer.cashSales + total
+    drawer.CurrentBalance = drawer.CurrentBalance + total
     drawer.tax = drawer.tax + tax
-    drawer.discount = drawer.discount+discount
+    drawer.discount = drawer.discount + discount
     for items in sale_items:
         item_list = item_list + "(" + items.product_id + ") "
     sale_records.append(
@@ -289,9 +307,9 @@ def cashSale(total, tax, discount, newWindow):
 def cardSale(total, tax, discount, newWindow):
     global currentUser
     item_list = ''
-    drawer.cardSales = drawer.cardSales+total
+    drawer.cardSales = drawer.cardSales + total
     drawer.tax = drawer.tax + tax
-    drawer.discount = drawer.discount+discount
+    drawer.discount = drawer.discount + discount
     for items in sale_items:
         item_list = item_list + "(" + items.product_id + ") "
     sale_records.append(
@@ -459,17 +477,36 @@ def addProductScreen():  # TODO: app must be rebooted to show new products
     E3 = Entry(addProductScrn)
     L3.pack()
     E3.pack()
-    B1 = Button(addProductScrn, text='Save', command=partial(addProduct, E1, E2, E3))
+    L4 = Label(addProductScrn, text="Grounds Used in grams:")
+    E4 = Entry(addProductScrn)
+    L4.pack()
+    E4.pack()
+    L5 = Label(addProductScrn, text="Milk Used in oz:")
+    E5 = Entry(addProductScrn)
+    L5.pack()
+    E5.pack()
+    L6 = Label(addProductScrn, text="Syrup Used in oz:")
+    E6 = Entry(addProductScrn)
+    L6.pack()
+    E6.pack()
+    L7 = Label(addProductScrn,text='Category')
+    variable = StringVar(editProductScrn)
+    E7 = OptionMenu(editProductScrn, variable, categories)
+    B1 = Button(addProductScrn, text='Save', command=partial(addProduct, E1, E2, E3, E4, E5, E6, variable))
     B1.pack()
     addProductScrn.pack()
 
 
-def addProduct(E1, E2, E3):  # TODO: app must be rebooted to show new products
+def addProduct(E1, E2, E3, E4, E5, E6, E7):  # TODO: app must be rebooted to show new products
     global product_list
     name = E1.get()
     price = E2.get()
     costToMake = E3.get()
-    product_list.append(Product(updateProductId(), name, price, costToMake, 0))
+    groundsUsed = E4.get()
+    milkUsed = E5.get()
+    syrupUsed = E6.get()
+    category = E7.get()
+    product_list.append(Product(updateProductId(), name, price, costToMake, 0, milkUsed, groundsUsed, syrupUsed, category))
     saveData()
     clear_frame()
     salesScreen()
@@ -484,7 +521,7 @@ def selectEditProduct():
     column = 0
     for product in product_list:
         button = tk.Button(editProductScrn, text=product.name + "\n$" + product.price,
-                           command=partial(addToSale, product), height=3, width=20)
+                           command=partial(editProductScreen, product), height=3, width=20)
         # button.pack(side=LEFT)
         button.grid(row=row, column=column)
         row = row + 1
@@ -496,6 +533,7 @@ def selectEditProduct():
 
 def editProductScreen(product):
     global product_list
+    global categories
     clear_frame()
     button = Button(editProductScrn, text='Home', command=salesScreen)
     button.pack()
@@ -523,18 +561,46 @@ def editProductScreen(product):
     E4 = OptionMenu(editProductScrn, variable, "True", "False")
     L4.pack()
     E4.pack()
-    B1 = Button(editProductScrn, text='Save', command=partial(editProduct, E1, E2, E3, variable, product))
+    L4 = Label(editProductScrn, text="Grounds Used in grams:")
+    E4 = Entry(editProductScrn)
+    E4.insert(0, product.groundsUsed)
+    L4.pack()
+    E4.pack()
+    L5 = Label(editProductScrn, text="Milk Used in oz:")
+    E5 = Entry(editProductScrn)
+    E3.insert(0, product.milkUsed)
+    L5.pack()
+    E5.pack()
+    L6 = Label(editProductScrn, text="Syrup Used in oz:")
+    E6 = Entry(editProductScrn)
+    E6.insert(0, product.syrupUsed)
+    L6.pack()
+    E6.pack()
+    L7 = Label(editProductScrn, text='Category:')
+    variable2 = StringVar(editProductScrn)
+    for category in categories:
+        if category in product.category:
+            variable2.set(category)
+
+    E7 = OptionMenu(editProductScrn, variable2, *categories)
+    L7.pack()
+    E7.pack()
+    B1 = Button(editProductScrn, text='Save', command=partial(editProduct, E1, E2, E3, variable, E4, E5, E6, variable2, product))
     B1.pack()
     B2 = Button(editProductScrn, text='Delete', command=partial(deleteProduct, product))
     B2.pack()
     editProductScrn.pack()
 
 
-def editProduct(E1, E2, E3, E4, product):
+def editProduct(E1, E2, E3, E4, E5, E6, E7, var2, product):
     name = E1.get()
     price = E2.get()
     costToMake = E3.get()
     disabled = E4.get()
+    groundsUsed = E5.get()
+    milkUsed = E6.get()
+    syrupUsed = E7.get()
+    category = var2.get()
     if disabled == 'True':
         disabled = '1'
     else:
@@ -546,6 +612,10 @@ def editProduct(E1, E2, E3, E4, product):
         product.price = price
         product.costToMake = costToMake
         product.disabled = disabled
+        product.groundsUsed = groundsUsed
+        product.milkUsed = milkUsed
+        product.syrupUsed = syrupUsed
+        product.category = category
         saveData()
         clear_frame()
         salesScreen()
@@ -612,6 +682,43 @@ def clearSale():
     salesScreen()
 
 
+def addCategory(E1):
+    categories.append(E1.get())
+    clear_frame()
+    saveData()
+    salesScreen()
+
+
+def addCategoryScreen():
+    clear_frame()
+    button = Button(addCategoryScrn, text='Home', command=salesScreen)
+    button.pack()
+    L1 = Label(addCategoryScrn, text='Enter Category Name')
+    E1 = Entry(addCategoryScrn)
+    L1.pack()
+    E1.pack()
+    B1 = Button(addCategoryScrn, text="Save", command=partial(addCategory, E1))
+    B1.pack()
+    addCategoryScrn.pack()
+
+
+def selectEditCategory():
+    clear_frame()
+    button = Button(editCategoryScrn, text='Home', command=salesScreen)
+    button.pack()
+    for category in categories:
+        cat = category
+        L1 = Label(editCategoryScrn, text=cat)
+        B1 = Button(editCategoryScrn, text='Remove', command=partial(deleteCategory, cat))
+        L1.pack()
+        B1.pack()
+    editCategoryScrn.pack()
+def deleteCategory(category):
+    categories.remove(category)
+    clear_frame()
+    saveData()
+    salesScreen()
+
 def salesScreen():
     global currentUser
     global screens
@@ -663,7 +770,13 @@ def salesScreen():
                                     command=addProductScreen)
         menubutton.menu.add_command(label="Edit/Delete Product",
                                     command=selectEditProduct)
+        menubutton.menu.add_command(label="Add Category ",
+                                    command=addCategoryScreen)
+        menubutton.menu.add_command(label="Edit/Delete Category",
+                                    command=selectEditCategory)  # TODO: Implement
         menubutton.menu.add_command(label="Reports Screen",
+                                    command=None)  # TODO: Implement
+        menubutton.menu.add_command(label="Inventory Screen",
                                     command=None)  # TODO: Implement
         if currentUser.accessLevel == '0':
             menubutton.pack(side=TOP)

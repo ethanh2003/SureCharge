@@ -10,7 +10,11 @@ class User:
 
 
 class Product:
-    def __init__(self, product_id, name, price, costToMake,disabled):
+    def __init__(self, product_id, name, price, costToMake, disabled, groundsUsed, milkUsed, syrupUsed, category):
+        self.category = category
+        self.syrupUsed = syrupUsed
+        self.milkUsed = milkUsed
+        self.groundsUsed = groundsUsed
         self.disabled = disabled
         self.product_id = product_id
         self.name = name
@@ -31,16 +35,16 @@ class Sale:
         self.checkNum = checkNum
 
 
-
-
 class Discount:
     def __init__(self, amount, type, employee, reason):
         self.amount = amount
         self.type = type
         self.employee = employee
         self.reason = reason
+
+
 class cashDrawer:
-    def __init__(self,startingTotal,CurrentBalance, cashSales, cardSales, Discounts, Paidin, Paidouts,Refunds,tax):
+    def __init__(self, startingTotal, CurrentBalance, cashSales, cardSales, Discounts, Paidin, Paidouts, Refunds, tax):
         self.tax = tax
         self.Refunds = Refunds
         self.Paidin = Paidin
@@ -50,5 +54,3 @@ class cashDrawer:
         self.Paidouts = Paidouts
         self.CurrentBalance = CurrentBalance
         self.startingTotal = startingTotal
-    
-        

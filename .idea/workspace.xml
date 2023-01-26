@@ -7,9 +7,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="eae9ad9e-190b-415b-a148-8f94020a8633" name="Changes" comment="beutifying">
+    <list default="true" id="eae9ad9e-190b-415b-a148-8f94020a8633" name="Changes" comment="added Drawer">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Classes.py" beforeDir="false" afterPath="$PROJECT_DIR$/Classes.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/csv_files/product_file.csv" beforeDir="false" afterPath="$PROJECT_DIR$/csv_files/product_file.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -87,7 +89,7 @@
       <workItem from="1674585138657" duration="6675000" />
       <workItem from="1674686798957" duration="16293000" />
       <workItem from="1674751680441" duration="7278000" />
-      <workItem from="1674759070951" duration="9857000" />
+      <workItem from="1674759070951" duration="14492000" />
     </task>
     <task id="LOCAL-00001" summary="Added classes, implimented saving and reading data.">
       <created>1674487237833</created>
@@ -145,7 +147,14 @@
       <option name="project" value="LOCAL" />
       <updated>1674768187125</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="added Drawer">
+      <created>1674769084974</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1674769084974</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -171,12 +180,13 @@
     <MESSAGE value="Working with add/edit/delete user and products" />
     <MESSAGE value="add discount feature" />
     <MESSAGE value="beutifying" />
-    <option name="LAST_COMMIT_MESSAGE" value="beutifying" />
+    <MESSAGE value="added Drawer" />
+    <option name="LAST_COMMIT_MESSAGE" value="added Drawer" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Team14POS$Classes.coverage" NAME="Classes Coverage Results" MODIFIED="1674755580611" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Team14POS$database.coverage" NAME="database Coverage Results" MODIFIED="1674223648971" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Team14POS$app.coverage" NAME="app Coverage Results" MODIFIED="1674768157297" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Team14POS$app.coverage" NAME="app Coverage Results" MODIFIED="1674773769179" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Team14POS$test.coverage" NAME="test Coverage Results" MODIFIED="1674486351202" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Team14POS$pytest_in_app_py.coverage" NAME="pytest in app.py Coverage Results" MODIFIED="1674503196328" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
