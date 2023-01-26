@@ -12,7 +12,7 @@ product_list = []
 sale_records = []
 stored_sale = None
 currentUser = None
-drawerTotal = 0
+drawer = cashDrawer(0,0,0,0,0,0,0,0,0)
 
 top = tk.Tk()
 top.title("Welcome to SureCharge")
@@ -76,6 +76,14 @@ def saveData():
         for sale in sale_records:
             sales_writer.writerow((sale.checkNum, sale.date, sale.time, sale.products, sale.user, sale.paymentType,
                                    sale.paymentAmount, sale.tax, sale.discount))
+    with open('csv_files/drawer.csv', mode='w', newline='') as drawer_file:
+        fieldnames = ['startingTotal', 'CurrentBalance', 'cashSales', 'cardSales', 'Discounts', 'Paidin', 'Paidouts',
+                      'Refunds','tax']
+
+        drawer_writer = csv.writer(drawer_file)
+        drawer_writer.writerow(fieldnames)
+        drawer_writer.writerow((drawer.startingTotal, drawer.CurrentBalance, drawer.cashSales, drawer.cardSales,
+                                drawer.Discounts, drawer.Paidin, drawer.Paidouts, drawer.Refunds, drawer.tax))
 
 
 def readData():
@@ -131,7 +139,27 @@ def readData():
             rows.append(row)
         for row in rows:
             discount_Record.append(Discount(row[0], row[1], row[2], row[3]))
+    with open('csv_files/drawer.csv') as csvfile:
+        # creating a csv reader object
+        csvreader = csv.reader(csvfile)
+        fields = []
+        rows = []
+        # extracting field names through first row
+        fields = next(csvreader)
 
+        # extracting each data row one by one
+        for row in csvreader:
+            rows.append(row)
+        for row in rows:
+            drawer.startingTotal = row[0]
+            drawer.CurrentBalance = row[1]
+            drawer.cashSales = row[2]
+            drawer.cardSales = row[3]
+            drawer.Discounts = row[4]
+            drawer.Paidin = row[5]
+            drawer.Paidouts = row[6]
+            drawer.Refunds = row[7]
+            drawer.tax = row[8]
 
 readData()
 saveData()
@@ -237,12 +265,14 @@ def saleTotal():
     return total
 
 
-def cashSale(total, tax, discount, newWindow):  # TODO: Not Working
+def cashSale(total, tax, discount, newWindow):
     global currentUser
-    global drawerTotal
 
     item_list = ''
-    drawerTotal = drawerTotal + total
+    drawer.cashSales = drawer.cashSales+total
+    drawer.CurrentBalance = drawer.CurrentBalance+total
+    drawer.tax = drawer.tax + tax
+    drawer.discount = drawer.discount+discount
     for items in sale_items:
         item_list = item_list + "(" + items.product_id + ") "
     sale_records.append(
@@ -259,6 +289,9 @@ def cashSale(total, tax, discount, newWindow):  # TODO: Not Working
 def cardSale(total, tax, discount, newWindow):
     global currentUser
     item_list = ''
+    drawer.cardSales = drawer.cardSales+total
+    drawer.tax = drawer.tax + tax
+    drawer.discount = drawer.discount+discount
     for items in sale_items:
         item_list = item_list + "(" + items.product_id + ") "
     sale_records.append(
@@ -324,8 +357,8 @@ def createUser(E1, E2, E3, E4):
 def selectEditUserScreen():
     clear_frame()
     button = Button(editUserScrn, text='Home', command=salesScreen)
-    button.grid(row=0,column=0)
-    row=1
+    button.grid(row=0, column=0)
+    row = 1
     column = 0
     for user in user_list:
         button = tk.Button(editUserScrn, text=(str(user.user_id) + "\n" + user.name),
@@ -410,7 +443,7 @@ def deleteUser(user):
     selectEditUserScreen()
 
 
-def addProductScreen(): #TODO: app must be rebooted to show new products
+def addProductScreen():  # TODO: app must be rebooted to show new products
     clear_frame()
     button = Button(addProductScrn, text='Home', command=salesScreen)
     button.pack()
@@ -431,7 +464,7 @@ def addProductScreen(): #TODO: app must be rebooted to show new products
     addProductScrn.pack()
 
 
-def addProduct(E1, E2, E3): #TODO: app must be rebooted to show new products
+def addProduct(E1, E2, E3):  # TODO: app must be rebooted to show new products
     global product_list
     name = E1.get()
     price = E2.get()
@@ -445,9 +478,9 @@ def addProduct(E1, E2, E3): #TODO: app must be rebooted to show new products
 def selectEditProduct():
     clear_frame()
     button = Button(editProductScrn, text='Home', command=salesScreen)
-    button.grid(row=0,column=1)
+    button.grid(row=0, column=1)
     global product_list
-    row=1
+    row = 1
     column = 0
     for product in product_list:
         button = tk.Button(editProductScrn, text=product.name + "\n$" + product.price,
@@ -630,7 +663,7 @@ def salesScreen():
                                     command=addProductScreen)
         menubutton.menu.add_command(label="Edit/Delete Product",
                                     command=selectEditProduct)
-        menubutton.menu.add_command(label="Reports Screem",
+        menubutton.menu.add_command(label="Reports Screen",
                                     command=None)  # TODO: Implement
         if currentUser.accessLevel == '0':
             menubutton.pack(side=TOP)
@@ -650,7 +683,7 @@ def salesScreen():
         for product in product_list:
             if product.disabled == '0':
                 button = tk.Button(itemsFrame, text=product.name + "\n$" + product.price,
-                                   command=partial(addToSale, product), height=3,width=20)
+                                   command=partial(addToSale, product), height=3, width=20)
                 # button.pack(side=LEFT)
                 button.grid(row=row, column=column)
                 row = row + 1
@@ -658,7 +691,7 @@ def salesScreen():
                     column = column + 1
                     row = 4
         if currentUser.accessLevel == '0':
-            openItem = Button(itemsFrame, text='Open Dollar', command=openDollar, height=3,width=20)
+            openItem = Button(itemsFrame, text='Open Dollar', command=openDollar, height=3, width=20)
             openItem.grid(row=row, column=column)
         row = 4
         for items in sale_items:

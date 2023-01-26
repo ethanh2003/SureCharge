@@ -39,3 +39,16 @@ class Discount:
         self.type = type
         self.employee = employee
         self.reason = reason
+class cashDrawer:
+    def __init__(self,startingTotal,CurrentBalance, cashSales, cardSales, Discounts, Paidin, Paidouts,Refunds,tax):
+        self.tax = tax
+        self.Refunds = Refunds
+        self.Paidin = Paidin
+        self.Discounts = Discounts
+        self.cardSales = cardSales
+        self.cashSales = cashSales
+        self.Paidouts = Paidouts
+        self.CurrentBalance = CurrentBalance
+        self.startingTotal = startingTotal
+    
+        
