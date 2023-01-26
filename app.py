@@ -324,11 +324,18 @@ def createUser(E1, E2, E3, E4):
 def selectEditUserScreen():
     clear_frame()
     button = Button(editUserScrn, text='Home', command=salesScreen)
-    button.pack()
+    button.grid(row=0,column=0)
+    row=1
+    column = 0
     for user in user_list:
         button = tk.Button(editUserScrn, text=(str(user.user_id) + "\n" + user.name),
-                           command=partial(editSingleUser, user))
-        button.pack()
+                           command=partial(editSingleUser, user), height=3, width=20)
+        # button.pack(side=LEFT)
+        button.grid(row=row, column=column)
+        row = row + 1
+        if row % 5 == 0:
+            column = column + 1
+            row = 1
     editUserScrn.pack()
 
 
@@ -438,12 +445,19 @@ def addProduct(E1, E2, E3): #TODO: app must be rebooted to show new products
 def selectEditProduct():
     clear_frame()
     button = Button(editProductScrn, text='Home', command=salesScreen)
-    button.pack()
+    button.grid(row=0,column=1)
     global product_list
+    row=1
+    column = 0
     for product in product_list:
-        B1 = Button(editProductScrn, text=(product.product_id + "\n" + product.name),
-                    command=partial(editProductScreen, product))
-        B1.pack()
+        button = tk.Button(editProductScrn, text=product.name + "\n$" + product.price,
+                           command=partial(addToSale, product), height=3, width=20)
+        # button.pack(side=LEFT)
+        button.grid(row=row, column=column)
+        row = row + 1
+        if row % 5 == 0:
+            column = column + 1
+            row = 1
     editProductScrn.pack()
 
 
@@ -636,7 +650,7 @@ def salesScreen():
         for product in product_list:
             if product.disabled == '0':
                 button = tk.Button(itemsFrame, text=product.name + "\n$" + product.price,
-                                   command=partial(addToSale, product))
+                                   command=partial(addToSale, product), height=3,width=20)
                 # button.pack(side=LEFT)
                 button.grid(row=row, column=column)
                 row = row + 1
@@ -644,7 +658,7 @@ def salesScreen():
                     column = column + 1
                     row = 4
         if currentUser.accessLevel == '0':
-            openItem = Button(itemsFrame, text='Open Dollar', command=openDollar)
+            openItem = Button(itemsFrame, text='Open Dollar', command=openDollar, height=3,width=20)
             openItem.grid(row=row, column=column)
         row = 4
         for items in sale_items:

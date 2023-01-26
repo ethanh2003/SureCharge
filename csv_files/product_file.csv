@@ -4,7 +4,7 @@ product_id,name,price,costToMake,disabled
 2,16oz latte,4.5,1,0
 3,12oz latte,4,1,0
 4,byoc,-0.5,0.5,1
-5,12oz Americano,3.,.75,0
+5,12oz Americano,3,.75,0
 6,16oz Americano,3.75,1.25,0
 7,12oz Cappachino,3.50,1.25,0
 8,16oz Cappichno,3.75,1.75,0
