@@ -7,10 +7,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="eae9ad9e-190b-415b-a148-8f94020a8633" name="Changes" comment="Working Add User Function">
+    <list default="true" id="eae9ad9e-190b-415b-a148-8f94020a8633" name="Changes" comment="Working with add/edit/delete user and products">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Classes.py" beforeDir="false" afterPath="$PROJECT_DIR$/Classes.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/csv_files/product_file.csv" beforeDir="false" afterPath="$PROJECT_DIR$/csv_files/product_file.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/csv_files/sales_file.csv" beforeDir="false" afterPath="$PROJECT_DIR$/csv_files/sales_file.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/csv_files/user_file.csv" beforeDir="false" afterPath="$PROJECT_DIR$/csv_files/user_file.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -87,7 +89,9 @@
       <workItem from="1674525893805" duration="111000" />
       <workItem from="1674579442772" duration="3847000" />
       <workItem from="1674585138657" duration="6675000" />
-      <workItem from="1674686798957" duration="16250000" />
+      <workItem from="1674686798957" duration="16293000" />
+      <workItem from="1674751680441" duration="7278000" />
+      <workItem from="1674759070951" duration="7897000" />
     </task>
     <task id="LOCAL-00001" summary="Added classes, implimented saving and reading data.">
       <created>1674487237833</created>
@@ -124,7 +128,14 @@
       <option name="project" value="LOCAL" />
       <updated>1674592106998</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Working with add/edit/delete user and products">
+      <created>1674703208019</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1674703208019</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -147,11 +158,13 @@
     <MESSAGE value="its something" />
     <MESSAGE value="Working Signin" />
     <MESSAGE value="Working Add User Function" />
-    <option name="LAST_COMMIT_MESSAGE" value="Working Add User Function" />
+    <MESSAGE value="Working with add/edit/delete user and products" />
+    <option name="LAST_COMMIT_MESSAGE" value="Working with add/edit/delete user and products" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/Team14POS$Classes.coverage" NAME="Classes Coverage Results" MODIFIED="1674755580611" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Team14POS$database.coverage" NAME="database Coverage Results" MODIFIED="1674223648971" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Team14POS$app.coverage" NAME="app Coverage Results" MODIFIED="1674703147082" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Team14POS$app.coverage" NAME="app Coverage Results" MODIFIED="1674767018223" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Team14POS$test.coverage" NAME="test Coverage Results" MODIFIED="1674486351202" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Team14POS$pytest_in_app_py.coverage" NAME="pytest in app.py Coverage Results" MODIFIED="1674503196328" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>

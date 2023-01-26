@@ -1,4 +1,3 @@
-
 class User:
     def __init__(self, user_id, name, pin, accessLevel, payrate, hoursWorked, clock_in):
         self.clock_in = clock_in
@@ -11,7 +10,8 @@ class User:
 
 
 class Product:
-    def __init__(self, product_id, name, price, costToMake):
+    def __init__(self, product_id, name, price, costToMake,disabled):
+        self.disabled = disabled
         self.product_id = product_id
         self.name = name
         self.price = price
@@ -19,8 +19,7 @@ class Product:
 
 
 class Sale:
-    def __init__(self, checkNum, date, time, products, user, paymentType, paymentAmount, tax, discount, refunded):
-        self.refunded = refunded
+    def __init__(self, checkNum, date, time, products, user, paymentType, paymentAmount, tax, discount):
         self.discount = discount
         self.tax = tax
         self.paymentAmount = paymentAmount
@@ -32,8 +31,11 @@ class Sale:
         self.checkNum = checkNum
 
 
-class GiftCard:
-    def __init__(self, cardNum, startAmount, currentBalance):
-        self.currentBalance = currentBalance
-        self.startAmount = startAmount
-        self.cardNum = cardNum
+
+
+class Discount:
+    def __init__(self, amount, type, employee, reason):
+        self.amount = amount
+        self.type = type
+        self.employee = employee
+        self.reason = reason
