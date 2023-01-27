@@ -22,7 +22,7 @@ sale_items = []
 discounts_Applied = 0
 discount_Record = []
 screens = []
-categories = []
+category_list = []
 # Frames for switching screens
 homeScrn = Frame(top)
 saleScrn = Frame(top)
@@ -66,11 +66,6 @@ def saveData():
             product_writer.writerow(
                 (product.product_id, product.name, product.price, product.costToMake, product.disabled,
                  product.groundsUsed, product.milkUsed, product.syrupUsed, product.category))
-    with open('csv_files/categories.csv', mode='w',newline='') as categories_file:
-
-        categories_writer = csv.writer(categories_file)
-        for category in categories:
-            categories_writer.writerow(category)
     with open('csv_files/discounts_file.csv', mode='w', newline='') as discounts_file:
         fieldnames = ['amount', 'type', 'employee', 'reason']
 
@@ -111,11 +106,6 @@ def readData():
             rows.append(row)
         for row in rows:
             user_list.append(User(row[0], row[1], row[2], row[3], row[4], row[5], row[6]))
-
-    with open('csv_files/categories.csv', 'r') as csvfile:
-        csvreader = csv.reader(csvfile)
-        for row in csvreader:
-            categories.append(row)
 
     with open('csv_files/product_file.csv', 'r') as csvfile:
         # creating a csv reader object
@@ -252,9 +242,10 @@ def updateProductId():
     return new_id
 
 
-def addToSale(product):
+def addToSale(product, newWindow):
     sale_items.append(product)
     clear_frame()
+    newWindow.destroy()
     salesScreen()
 
 
@@ -489,10 +480,11 @@ def addProductScreen():  # TODO: app must be rebooted to show new products
     E6 = Entry(addProductScrn)
     L6.pack()
     E6.pack()
-    L7 = Label(addProductScrn,text='Category')
-    variable = StringVar(editProductScrn)
-    E7 = OptionMenu(editProductScrn, variable, categories)
-    B1 = Button(addProductScrn, text='Save', command=partial(addProduct, E1, E2, E3, E4, E5, E6, variable))
+    L7 = Label(addProductScrn, text="Category:")
+    E7 = Entry(addProductScrn)
+    L7.pack()
+    E7.pack()
+    B1 = Button(addProductScrn, text='Save', command=partial(addProduct, E1, E2, E3, E4, E5, E6, E7))
     B1.pack()
     addProductScrn.pack()
 
@@ -506,7 +498,8 @@ def addProduct(E1, E2, E3, E4, E5, E6, E7):  # TODO: app must be rebooted to sho
     milkUsed = E5.get()
     syrupUsed = E6.get()
     category = E7.get()
-    product_list.append(Product(updateProductId(), name, price, costToMake, 0, milkUsed, groundsUsed, syrupUsed, category))
+    product_list.append(
+        Product(updateProductId(), name, price, costToMake, 0, milkUsed, groundsUsed, syrupUsed, category))
     saveData()
     clear_frame()
     salesScreen()
@@ -533,7 +526,7 @@ def selectEditProduct():
 
 def editProductScreen(product):
     global product_list
-    global categories
+    global category_list
     clear_frame()
     button = Button(editProductScrn, text='Home', command=salesScreen)
     button.pack()
@@ -577,15 +570,12 @@ def editProductScreen(product):
     L6.pack()
     E6.pack()
     L7 = Label(editProductScrn, text='Category:')
-    variable2 = StringVar(editProductScrn)
-    for category in categories:
-        if category in product.category:
-            variable2.set(category)
-
-    E7 = OptionMenu(editProductScrn, variable2, *categories)
+    E7 = Entry(editProductScrn)
+    E7.insert(0, product.category)  # TODO: Find a better way to select categories
     L7.pack()
     E7.pack()
-    B1 = Button(editProductScrn, text='Save', command=partial(editProduct, E1, E2, E3, variable, E4, E5, E6, variable2, product))
+    B1 = Button(editProductScrn, text='Save',
+                command=partial(editProduct, E1, E2, E3, variable, E4, E5, E6, E7, product))
     B1.pack()
     B2 = Button(editProductScrn, text='Delete', command=partial(deleteProduct, product))
     B2.pack()
@@ -675,49 +665,20 @@ def homeScreen():
     homeScrn.pack()
 
 
+def getCatList():
+    global category_list
+    for products in product_list:
+        if products.category not in category_list:
+            category_list.append(products.category)
+    return category_list
+
+
 def clearSale():
     global sale_items
     sale_items = []
     clear_frame()
     salesScreen()
 
-
-def addCategory(E1):
-    categories.append(E1.get())
-    clear_frame()
-    saveData()
-    salesScreen()
-
-
-def addCategoryScreen():
-    clear_frame()
-    button = Button(addCategoryScrn, text='Home', command=salesScreen)
-    button.pack()
-    L1 = Label(addCategoryScrn, text='Enter Category Name')
-    E1 = Entry(addCategoryScrn)
-    L1.pack()
-    E1.pack()
-    B1 = Button(addCategoryScrn, text="Save", command=partial(addCategory, E1))
-    B1.pack()
-    addCategoryScrn.pack()
-
-
-def selectEditCategory():
-    clear_frame()
-    button = Button(editCategoryScrn, text='Home', command=salesScreen)
-    button.pack()
-    for category in categories:
-        cat = category
-        L1 = Label(editCategoryScrn, text=cat)
-        B1 = Button(editCategoryScrn, text='Remove', command=partial(deleteCategory, cat))
-        L1.pack()
-        B1.pack()
-    editCategoryScrn.pack()
-def deleteCategory(category):
-    categories.remove(category)
-    clear_frame()
-    saveData()
-    salesScreen()
 
 def salesScreen():
     global currentUser
@@ -728,7 +689,7 @@ def salesScreen():
     def addOpenItem(E1, E2, win):
         amount = E1.get()
         Description = E2.get()
-        sale_items.append(Product(999, ('Open Item ' + Description), amount, 0, 0))
+        sale_items.append(Product(999, ('Open Item ' + Description), amount, 0, 0, 0, 0, 0, 'misc'))
         clear_frame()
         salesScreen()
         win.destroy()
@@ -747,6 +708,27 @@ def salesScreen():
         E2.pack()
         B1 = Button(newWindow, text='Enter', command=partial(addOpenItem, E1, E2, newWindow))
         B1.pack()
+
+    def showCategory(cat):
+        newWindow = Toplevel(top)
+        newWindow.geometry("750x750")
+        newWindow.title("Select Product")
+        row = 0
+        column = 0
+        for product in product_list:
+            if product.disabled == '0':
+                if product.category == cat:
+                    button = tk.Button(newWindow, text=product.name + "\n$" + product.price,
+                                       command=partial(addToSale, product, newWindow), height=3, width=20)
+                    # button.pack(side=LEFT)
+                    button.grid(row=row, column=column)
+                    row = row + 1
+                    if row % 5 == 0 and row != 0:
+                        column = column + 1
+                        row = 0
+        if currentUser.accessLevel == '0' and cat == 'misc':
+            openItem = Button(newWindow, text='Open Dollar', command=openDollar, height=3, width=20)
+            openItem.grid(row=row, column=column)
 
     salesFrame = Frame(saleScrn)
     itemsFrame = Frame(saleScrn)
@@ -770,10 +752,6 @@ def salesScreen():
                                     command=addProductScreen)
         menubutton.menu.add_command(label="Edit/Delete Product",
                                     command=selectEditProduct)
-        menubutton.menu.add_command(label="Add Category ",
-                                    command=addCategoryScreen)
-        menubutton.menu.add_command(label="Edit/Delete Category",
-                                    command=selectEditCategory)  # TODO: Implement
         menubutton.menu.add_command(label="Reports Screen",
                                     command=None)  # TODO: Implement
         menubutton.menu.add_command(label="Inventory Screen",
@@ -793,19 +771,14 @@ def salesScreen():
         # menuFrame.grid_columnconfigure(3, weight=2)
         row = 4
         column = 0
-        for product in product_list:
-            if product.disabled == '0':
-                button = tk.Button(itemsFrame, text=product.name + "\n$" + product.price,
-                                   command=partial(addToSale, product), height=3, width=20)
-                # button.pack(side=LEFT)
-                button.grid(row=row, column=column)
-                row = row + 1
-                if row % 5 == 0 and row != 5:
-                    column = column + 1
-                    row = 4
-        if currentUser.accessLevel == '0':
-            openItem = Button(itemsFrame, text='Open Dollar', command=openDollar, height=3, width=20)
-            openItem.grid(row=row, column=column)
+        getCatList()
+        for cat in category_list:
+            cat_button = Button(itemsFrame, text=cat, command=partial(showCategory, cat))
+            cat_button.grid(row=row, column=column)
+            row = row + 1
+            if row % 5 == 0 and row != 5:
+                column = column + 1
+                row = 4
         row = 4
         for items in sale_items:
             L1 = Label(salesFrame, text=(items.name + ' $' + items.price))
