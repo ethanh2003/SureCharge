@@ -1,3 +1,4 @@
 startingTotal,CashOwed,cashSales,cardSales,Discounts,Paidin,Paidouts,Refunds,tax,ranBy,Date,Time,overShort
 300,11.22,11.22,0,0,0,0,0,0.73,Admin,1/27/2023,46:05.3,0.03
 300.03,0,0,0,0,0,0,0,0,Admin,1/27/2023,46:23.4,-0.03
+300.0,3.48,3.48,3.2,0,0,0,0,0.44,Admin,2023-01-27,12:11:05.527151,0.01

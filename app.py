@@ -329,11 +329,11 @@ def cashSale(total, tax, discount, newWindow):
 def cardSale(total, tax, discount, newWindow):
     global currentUser
     item_list = ''
-    drawer.cardSales = drawer.cardSales + total
-    drawer.tax = drawer.tax + tax
-    drawer.discount = drawer.discount + discount
+    drawer.cardSales = round(float(drawer.cardSales) + total,2)
+    drawer.tax = round(float(drawer.tax) + tax,2)
+    drawer.discount = round(float(drawer.Discounts) + discount,2)
     for items in sale_items:
-        item_list = item_list + "(" + items.product_id + ") "
+        item_list = item_list + "(" + str(items.product_id) + ") "
     sale_records.append(
         Sale(updateCheckNum(), datetime.now().date(), datetime.now().time(), item_list, currentUser.name, 'Card',
              total,
