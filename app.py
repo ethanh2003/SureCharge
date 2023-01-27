@@ -790,15 +790,23 @@ def salesScreen():
     clear_frame()
     frames = []
 
-    def addOpenItem(E1, E2, win):
+    def addOpenItem(E1, E2, win,win2):
         amount = E1.get()
-        Description = E2.get()
-        sale_items.append(Product(999, ('Open Item ' + Description), amount, 0, 0, 0, 0, 0, 'misc'))
-        clear_frame()
-        salesScreen()
+        valid=True
+        try:
+            float(amount)
+        except:
+            valid=False
+            tk.messagebox.showwarning('Error', 'Invalid Entry')
+        if valid:
+            Description = E2.get()
+            sale_items.append(Product(999, ('Open Item ' + Description), amount, 0, 0, 0, 0, 0, 'misc'))
+            clear_frame()
+            salesScreen()
         win.destroy()
+        win2.destroy()
 
-    def openDollar():
+    def openDollar(win):
         newWindow = Toplevel(top)
         newWindow.geometry("750x250")
         newWindow.title("Open Dollar")
@@ -810,7 +818,7 @@ def salesScreen():
         E2 = Entry(newWindow)
         L2.pack()
         E2.pack()
-        B1 = Button(newWindow, text='Enter', command=partial(addOpenItem, E1, E2, newWindow))
+        B1 = Button(newWindow, text='Enter', command=partial(addOpenItem, E1, E2, newWindow,win))
         B1.pack()
 
     def showCategory(cat):
@@ -831,7 +839,7 @@ def salesScreen():
                         column = column + 1
                         row = 0
         if currentUser.accessLevel == '0' and cat == 'misc':
-            openItem = Button(newWindow, text='Open Dollar', command=openDollar, height=3, width=20)
+            openItem = Button(newWindow, text='Open Dollar', command=partial(openDollar,newWindow), height=3, width=20)
             openItem.grid(row=row, column=column)
 
     salesFrame = Frame(saleScrn)
