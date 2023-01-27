@@ -20,6 +20,7 @@ top.state('zoomed')
 
 sale_items = []
 discounts_Applied = 0
+drawer_record = []
 discount_Record = []
 screens = []
 category_list = []
@@ -34,6 +35,8 @@ addProductScrn = Frame(top)
 editProductScrn = Frame(top)
 addCategoryScrn = Frame(top)
 editCategoryScrn = Frame(top)
+selectReportsScrn = Frame(top)
+drawerReportScrn = Frame(top)
 
 screens.append(homeScrn)
 screens.append(saleScrn)
@@ -45,9 +48,23 @@ screens.append(addProductScrn)
 screens.append(editProductScrn)
 screens.append(addCategoryScrn)
 screens.append(editCategoryScrn)
+screens.append(selectReportsScrn)
+screens.append(drawerReportScrn)
 
 
 def saveData():
+    with open('csv_files/drawer_hist.csv', mode='w', newline='') as drawerHist_file:
+        fieldnames = ['startingTotal', 'CashOwed', 'cashSales', 'cardSales', 'Discounts', 'Paidin', 'Paidouts',
+                      'Refunds', 'tax', 'ranBy',
+                      'Date', 'Time','overShort']
+
+        drawerHist_writer = csv.writer(drawerHist_file)
+        drawerHist_writer.writerow(fieldnames)
+        for hist in drawer_record:
+            drawerHist_writer.writerow(
+                (hist.startingTotal, hist.CashOwed, hist.cashSales, hist.cardSales, hist.Discounts, hist.Paidin,
+                 hist.Paidouts, hist.Refunds, hist.tax, hist.ranBy,
+                 hist.Date, hist.Time, hist.overShort))
     with open('csv_files/user_file.csv', mode='w', newline='') as user_file:
         fieldnames = ['user_id', 'name', 'pin', 'accessLevel', 'payrate', 'hoursWorked', 'clock-in']
 
@@ -83,12 +100,12 @@ def saveData():
             sales_writer.writerow((sale.checkNum, sale.date, sale.time, sale.products, sale.user, sale.paymentType,
                                    sale.paymentAmount, sale.tax, sale.discount))
     with open('csv_files/drawer.csv', mode='w', newline='') as drawer_file:
-        fieldnames = ['startingTotal', 'CurrentBalance', 'cashSales', 'cardSales', 'Discounts', 'Paidin', 'Paidouts',
+        fieldnames = ['startingTotal', 'CashOwed', 'cashSales', 'cardSales', 'Discounts', 'Paidin', 'Paidouts',
                       'Refunds', 'tax']
 
         drawer_writer = csv.writer(drawer_file)
         drawer_writer.writerow(fieldnames)
-        drawer_writer.writerow((drawer.startingTotal, drawer.CurrentBalance, drawer.cashSales, drawer.cardSales,
+        drawer_writer.writerow((drawer.startingTotal, drawer.CashOwed, drawer.cashSales, drawer.cardSales,
                                 drawer.Discounts, drawer.Paidin, drawer.Paidouts, drawer.Refunds, drawer.tax))
 
 
@@ -106,7 +123,21 @@ def readData():
             rows.append(row)
         for row in rows:
             user_list.append(User(row[0], row[1], row[2], row[3], row[4], row[5], row[6]))
+    with open('csv_files/drawer_hist.csv', 'r') as csvfile:
+        # creating a csv reader object
+        csvreader = csv.reader(csvfile)
+        fields = []
+        rows = []
+        # extracting field names through first row
+        fields = next(csvreader)
 
+        # extracting each data row one by one
+        for row in csvreader:
+            rows.append(row)
+        for row in rows:
+            drawer_record.append(
+                DrawerReport(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9],
+                             row[10], row[11],row[12]))
     with open('csv_files/product_file.csv', 'r') as csvfile:
         # creating a csv reader object
         csvreader = csv.reader(csvfile)
@@ -159,7 +190,7 @@ def readData():
             rows.append(row)
         for row in rows:
             drawer.startingTotal = row[0]
-            drawer.CurrentBalance = row[1]
+            drawer.CashOwed = row[1]
             drawer.cashSales = row[2]
             drawer.cardSales = row[3]
             drawer.Discounts = row[4]
@@ -278,12 +309,12 @@ def cashSale(total, tax, discount, newWindow):
     global currentUser
 
     item_list = ''
-    drawer.cashSales = drawer.cashSales + total
-    drawer.CurrentBalance = drawer.CurrentBalance + total
-    drawer.tax = drawer.tax + tax
-    drawer.discount = drawer.discount + discount
+    drawer.cashSales = round(float(drawer.cashSales) + total,2)
+    drawer.CashOwed = round(float(drawer.CashOwed) + total,2)
+    drawer.tax = round(float(drawer.tax) + tax,2)
+    drawer.discount = round(float(drawer.Discounts) + discount,2)
     for items in sale_items:
-        item_list = item_list + "(" + items.product_id + ") "
+        item_list = item_list + "(" + str(items.product_id) + ") "
     sale_records.append(
         Sale(1, datetime.now().date(), datetime.now().time(), item_list, currentUser.name, 'Cash',
              total,
@@ -363,6 +394,16 @@ def createUser(E1, E2, E3, E4):
             salesScreen()
 
 
+def clear_frame():
+    global screens
+    for frame in screens:
+        frame.pack_forget()
+        frame.grid_forget()
+        for widgets in frame.winfo_children():
+            widgets.pack_forget()
+            widgets.grid_forget()
+
+
 def selectEditUserScreen():
     clear_frame()
     button = Button(editUserScrn, text='Home', command=salesScreen)
@@ -379,16 +420,6 @@ def selectEditUserScreen():
             column = column + 1
             row = 1
     editUserScrn.pack()
-
-
-def clear_frame():
-    global screens
-    for frame in screens:
-        frame.pack_forget()
-        frame.grid_forget()
-        for widgets in frame.winfo_children():
-            widgets.pack_forget()
-            widgets.grid_forget()
 
 
 def editSingleUser(user):
@@ -450,6 +481,79 @@ def deleteUser(user):
     clear_frame()
     saveData()
     selectEditUserScreen()
+
+
+def selectReportsScreen():
+    clear_frame()
+    button = Button(selectReportsScrn, text='Home', command=salesScreen)
+    button.pack()
+    drawer_reportButton = Button(selectReportsScrn, text='Drawer Report', command=drawerReport)
+    drawer_reportButton.pack()
+    selectReportsScrn.pack()
+
+
+def drawerReport():
+    def updateStartTotal(E1):
+        newTotal = E1.get()
+        drawer.startingTotal = newTotal
+
+    def runDrawer(E1):
+        inDrawer = E1.get()
+        overShort = float(inDrawer) - (float(drawer.startingTotal)+float(drawer.CashOwed))
+        overShort = round(overShort,2)
+        answer = tk.messagebox.askyesno('Confirm', ('Drawer is Over/Short: $' + str(overShort)))
+        if answer:
+            drawer_record.append(DrawerReport(drawer.startingTotal, drawer.CashOwed, drawer.cashSales, drawer.cardSales,
+                                              drawer.Discounts, drawer.Paidin,
+                                              drawer.Paidouts, drawer.Refunds, drawer.tax, currentUser.name,
+                                              datetime.now().date(), datetime.now().time(),overShort))
+            drawer.startingTotal = float(inDrawer)-float(drawer.CashOwed)
+            drawer.CashOwed = 0
+            drawer.tax = 0
+            drawer.Paidin = 0
+            drawer.Paidouts = 0
+            drawer.cashSales = 0
+            drawer.cardSales = 0
+            drawer.Refunds = 0
+            drawer.Discounts = 0
+            clear_frame()
+            drawerReport()
+
+    clear_frame()
+    button = Button(drawerReportScrn, text='Home', command=salesScreen)
+    button.grid(row=0, column=0)
+    StartTotal = Label(drawerReportScrn, text='Starting Total: $')
+    StartTotal.grid(row=1, column=0)
+    startTotalEntry = Entry(drawerReportScrn)
+    startTotalEntry.insert(0, drawer.startingTotal)
+    startTotalEntry.grid(row=1, column=1)
+    currentTotal = Label(drawerReportScrn, text=('Cash Owed: $' + str(drawer.CashOwed)))
+    currentTotal.grid(row=2, column=0)
+    cashSales = Label(drawerReportScrn, text=('Cash Sales: $' + str(drawer.cashSales)))
+    cashSales.grid(row=3, column=0)
+    cardSales = Label(drawerReportScrn, text=('Card Sales: $' + str(drawer.cardSales)))
+    cardSales.grid(row=4, column=0)
+    Discounts = Label(drawerReportScrn, text=('Discounts: $' + str(drawer.Discounts)))
+    Discounts.grid(row=5, column=0)
+    Paidin = Label(drawerReportScrn, text=('Paid-in: $' + str(drawer.Paidin)))
+    Paidin.grid(row=6, column=0)
+    Paidouts = Label(drawerReportScrn, text=('Paid-out: $' + str(drawer.Paidouts)))
+    Paidouts.grid(row=7, column=0)
+    Refunds = Label(drawerReportScrn, text=('Refunds: $' + str(drawer.Refunds)))
+    Refunds.grid(row=8, column=0)
+    tax = Label(drawerReportScrn, text=('Tax: $' + str(drawer.tax)))
+    tax.grid(row=9, column=0)
+    countL = Label(drawerReportScrn, text='Enter Total Amount In Drawer: $')
+    countL.grid(row=10, column=0)
+    countE = Entry(drawerReportScrn)
+    countE.grid(row=10, column=1)
+    B1 = Button(drawerReportScrn, text='Save Starting Total', command=partial(updateStartTotal, startTotalEntry))
+    if float(drawer.CashOwed) == 0:
+        B1.grid(row=11, column=0)
+    B2 = Button(drawerReportScrn, text='Run Drawer', command=partial(runDrawer, countE))
+    B2.grid(row=12, column=0)
+
+    drawerReportScrn.pack()
 
 
 def addProductScreen():  # TODO: app must be rebooted to show new products
@@ -753,7 +857,7 @@ def salesScreen():
         menubutton.menu.add_command(label="Edit/Delete Product",
                                     command=selectEditProduct)
         menubutton.menu.add_command(label="Reports Screen",
-                                    command=None)  # TODO: Implement
+                                    command=selectReportsScreen)
         menubutton.menu.add_command(label="Inventory Screen",
                                     command=None)  # TODO: Implement
         if currentUser.accessLevel == '0':

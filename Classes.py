@@ -44,7 +44,7 @@ class Discount:
 
 
 class cashDrawer:
-    def __init__(self, startingTotal, CurrentBalance, cashSales, cardSales, Discounts, Paidin, Paidouts, Refunds, tax):
+    def __init__(self, startingTotal, CashOwed, cashSales, cardSales, Discounts, Paidin, Paidouts, Refunds, tax):
         self.tax = tax
         self.Refunds = Refunds
         self.Paidin = Paidin
@@ -52,5 +52,21 @@ class cashDrawer:
         self.cardSales = cardSales
         self.cashSales = cashSales
         self.Paidouts = Paidouts
-        self.CurrentBalance = CurrentBalance
+        self.CashOwed = CashOwed
+        self.startingTotal = startingTotal
+class DrawerReport:
+    def __init__(self,startingTotal, CashOwed, cashSales, cardSales, Discounts, Paidin, Paidouts, Refunds, tax, ranBy,
+                 Date,Time,overShort):
+        self.overShort = overShort
+        self.Time = Time
+        self.Date = Date
+        self.ranBy = ranBy
+        self.tax = tax
+        self.Refunds = Refunds
+        self.Paidouts = Paidouts
+        self.Paidin = Paidin
+        self.Discounts = Discounts
+        self.cardSales = cardSales
+        self.cashSales = cashSales
+        self.CashOwed = CashOwed
         self.startingTotal = startingTotal
