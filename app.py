@@ -23,6 +23,7 @@ discounts_Applied = 0
 drawer_record = []
 discount_Record = []
 screens = []
+saved_orders = []
 category_list = []
 # Frames for switching screens
 homeScrn = Frame(top)
@@ -56,7 +57,7 @@ def saveData():
     with open('csv_files/drawer_hist.csv', mode='w', newline='') as drawerHist_file:
         fieldnames = ['startingTotal', 'CashOwed', 'cashSales', 'cardSales', 'Discounts', 'Paidin', 'Paidouts',
                       'Refunds', 'tax', 'ranBy',
-                      'Date', 'Time','overShort']
+                      'Date', 'Time', 'overShort']
 
         drawerHist_writer = csv.writer(drawerHist_file)
         drawerHist_writer.writerow(fieldnames)
@@ -99,6 +100,14 @@ def saveData():
         for sale in sale_records:
             sales_writer.writerow((sale.checkNum, sale.date, sale.time, sale.products, sale.user, sale.paymentType,
                                    sale.paymentAmount, sale.tax, sale.discount))
+    with open('csv_files/saved_orders.csv', mode='w', newline='') as saved_orders_file:
+        fieldnames = ['orderTotal', 'Items', 'Date', 'Time', 'user','customerName']
+
+        saved_orders_writer = csv.writer(saved_orders_file)
+        saved_orders_writer.writerow(fieldnames)
+        for orders in saved_orders:
+            saved_orders_writer.writerow((orders.orderTotal, orders.Items, orders.Date, orders.Time, orders.user,
+                                          orders.customerName))
     with open('csv_files/drawer.csv', mode='w', newline='') as drawer_file:
         fieldnames = ['startingTotal', 'CashOwed', 'cashSales', 'cardSales', 'Discounts', 'Paidin', 'Paidouts',
                       'Refunds', 'tax']
@@ -137,7 +146,7 @@ def readData():
         for row in rows:
             drawer_record.append(
                 DrawerReport(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9],
-                             row[10], row[11],row[12]))
+                             row[10], row[11], row[12]))
     with open('csv_files/product_file.csv', 'r') as csvfile:
         # creating a csv reader object
         csvreader = csv.reader(csvfile)
@@ -164,6 +173,19 @@ def readData():
             rows.append(row)
         for row in rows:
             sale_records.append(Sale(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]))
+    with open('csv_files/saved_orders.csv', 'r') as csvfile:
+        # creating a csv reader object
+        csvreader = csv.reader(csvfile)
+        fields = []
+        rows = []
+        # extracting field names through first row
+        fields = next(csvreader)
+
+        # extracting each data row one by one
+        for row in csvreader:
+            rows.append(row)
+        for row in rows:
+            saved_orders.append(saveOrder(row[0], row[1], row[2], row[3], row[4],row[5]))
     with open('csv_files/discounts_file.csv', 'r') as csvfile:
         # creating a csv reader object
         csvreader = csv.reader(csvfile)
@@ -220,6 +242,24 @@ def clockOut():
     currentUser.clock_in = '0'
     saveData()
     homeScreen()
+
+
+def storeOrder(E1, newWindow):
+    if float(saleTotal()) != 0:
+        customerName = E1.get()
+        itemList = ''
+        for it in sale_items:
+            itemList = itemList + '(' + str(it.product_id) + ')'
+        saved_orders.append(
+            saveOrder(saleTotal(), itemList, datetime.now().date(), datetime.now().time(), currentUser.name,customerName))
+        saveData()
+        clearSale()
+        clear_frame()
+        newWindow.destroy()
+        salesScreen()
+    else:
+        tk.messagebox.showwarning('Error', 'No Order To Save')
+        newWindow.destroy()
 
 
 def clockIn():
@@ -309,10 +349,10 @@ def cashSale(total, tax, discount, newWindow):
     global currentUser
 
     item_list = ''
-    drawer.cashSales = round(float(drawer.cashSales) + total,2)
-    drawer.CashOwed = round(float(drawer.CashOwed) + total,2)
-    drawer.tax = round(float(drawer.tax) + tax,2)
-    drawer.discount = round(float(drawer.Discounts) + discount,2)
+    drawer.cashSales = round(float(drawer.cashSales) + total, 2)
+    drawer.CashOwed = round(float(drawer.CashOwed) + total, 2)
+    drawer.tax = round(float(drawer.tax) + tax, 2)
+    drawer.discount = round(float(drawer.Discounts) + discount, 2)
     for items in sale_items:
         item_list = item_list + "(" + str(items.product_id) + ") "
     sale_records.append(
@@ -329,9 +369,9 @@ def cashSale(total, tax, discount, newWindow):
 def cardSale(total, tax, discount, newWindow):
     global currentUser
     item_list = ''
-    drawer.cardSales = round(float(drawer.cardSales) + total,2)
-    drawer.tax = round(float(drawer.tax) + tax,2)
-    drawer.discount = round(float(drawer.Discounts) + discount,2)
+    drawer.cardSales = round(float(drawer.cardSales) + total, 2)
+    drawer.tax = round(float(drawer.tax) + tax, 2)
+    drawer.discount = round(float(drawer.Discounts) + discount, 2)
     for items in sale_items:
         item_list = item_list + "(" + str(items.product_id) + ") "
     sale_records.append(
@@ -499,15 +539,15 @@ def drawerReport():
 
     def runDrawer(E1):
         inDrawer = E1.get()
-        overShort = float(inDrawer) - (float(drawer.startingTotal)+float(drawer.CashOwed))
-        overShort = round(overShort,2)
+        overShort = float(inDrawer) - (float(drawer.startingTotal) + float(drawer.CashOwed))
+        overShort = round(overShort, 2)
         answer = tk.messagebox.askyesno('Confirm', ('Drawer is Over/Short: $' + str(overShort)))
         if answer:
             drawer_record.append(DrawerReport(drawer.startingTotal, drawer.CashOwed, drawer.cashSales, drawer.cardSales,
                                               drawer.Discounts, drawer.Paidin,
                                               drawer.Paidouts, drawer.Refunds, drawer.tax, currentUser.name,
-                                              datetime.now().date(), datetime.now().time(),overShort))
-            drawer.startingTotal = float(inDrawer)-float(drawer.CashOwed)
+                                              datetime.now().date(), datetime.now().time(), overShort))
+            drawer.startingTotal = float(inDrawer) - float(drawer.CashOwed)
             drawer.CashOwed = 0
             drawer.tax = 0
             drawer.Paidin = 0
@@ -789,14 +829,38 @@ def salesScreen():
     global screens
     clear_frame()
     frames = []
-
-    def addOpenItem(E1, E2, win,win2):
+    def pullOrder(order,newWindow):
+        for prod in product_list:
+            prodid = '('+str(prod.product_id)+')'
+            if prodid in order.Items:
+                sale_items.append(prod)
+        newWindow.destroy()
+        saved_orders.remove(order)
+    def saveOrderName():
+        newWindow = Toplevel(top)
+        newWindow.geometry("750x250")
+        newWindow.title("Enter name")
+        L1 = Label(newWindow,text='Enter Customer Name')
+        E1 = Entry(newWindow)
+        E1.pack()
+        L1.pack()
+        B1 = Button(newWindow,text='Save', command=partial(storeOrder,E1,newWindow))
+        B1.pack()
+    def retrieveSale():
+        newWindow = Toplevel(top)
+        newWindow.geometry("750x250")
+        newWindow.title("Select Order")
+        for order in saved_orders:
+            B1 = Button(newWindow,text=('Customer: '+order.customerName+'\n$'+str(order.orderTotal)+'\nDate:'+str(order.Date)+'\nTime:'+str(order.Time)+
+                                        '\nUser:'+str(order.user)),command=partial(pullOrder,order,newWindow))
+            B1.pack()
+    def addOpenItem(E1, E2, win, win2):
         amount = E1.get()
-        valid=True
+        valid = True
         try:
             float(amount)
         except:
-            valid=False
+            valid = False
             tk.messagebox.showwarning('Error', 'Invalid Entry')
         if valid:
             Description = E2.get()
@@ -818,7 +882,7 @@ def salesScreen():
         E2 = Entry(newWindow)
         L2.pack()
         E2.pack()
-        B1 = Button(newWindow, text='Enter', command=partial(addOpenItem, E1, E2, newWindow,win))
+        B1 = Button(newWindow, text='Enter', command=partial(addOpenItem, E1, E2, newWindow, win))
         B1.pack()
 
     def showCategory(cat):
@@ -839,7 +903,7 @@ def salesScreen():
                         column = column + 1
                         row = 0
         if currentUser.accessLevel == '0' and cat == 'misc':
-            openItem = Button(newWindow, text='Open Dollar', command=partial(openDollar,newWindow), height=3, width=20)
+            openItem = Button(newWindow, text='Open Dollar', command=partial(openDollar, newWindow), height=3, width=20)
             openItem.grid(row=row, column=column)
 
     salesFrame = Frame(saleScrn)
@@ -873,6 +937,10 @@ def salesScreen():
             # menubutton.grid(row=0, column=0)
         clr_sale = Button(menuFrame, text='Clear Sale', command=clearSale)
         clr_sale.pack(side=BOTTOM)
+        save_sale = Button(menuFrame, text='Save Sale', command=saveOrderName)
+        save_sale.pack(side=BOTTOM)
+        retrieve_sale = Button(menuFrame,text='Retrieve Sale', command=retrieveSale)
+        retrieve_sale.pack(side=BOTTOM)
         # clr_sale.grid(row=3, column=3)
         B1 = Button(menuFrame, text='Clock Out', command=clockOut)
         B1.pack(side=RIGHT)

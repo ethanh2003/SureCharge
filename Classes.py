@@ -33,6 +33,14 @@ class Sale:
         self.time = time
         self.date = date
         self.checkNum = checkNum
+class saveOrder:
+    def __init__(self,orderTotal,Items,Date,Time,user,customerName):
+        self.customerName = customerName
+        self.user = user
+        self.Time = Time
+        self.Date = Date
+        self.Items = Items
+        self.orderTotal = orderTotal
 
 
 class Discount:
