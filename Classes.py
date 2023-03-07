@@ -20,10 +20,20 @@ class Product:
         self.name = name
         self.price = price
         self.costToMake = costToMake
-
-
+class Customer:
+    def __init__(self, name, phoneNumber, rewards):
+        self.rewards = rewards
+        self.phoneNumber = phoneNumber
+        self.name = name
+class discount:
+    def __init__(self,name,amount,managerRequired,fixed):
+        self.fixed = fixed
+        self.managerRequired = managerRequired
+        self.amount = amount
+        self.name = name
 class Sale:
-    def __init__(self, checkNum, date, time, products, user, paymentType, paymentAmount, tax, discount):
+    def __init__(self, checkNum, date, time, products, user, paymentType, paymentAmount, tax, discount,customer_id):
+        self.customer_id = customer_id
         self.discount = discount
         self.tax = tax
         self.paymentAmount = paymentAmount

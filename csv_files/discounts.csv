@@ -1,0 +1,4 @@
+name,amount,managerRequired,fixed
+Employee Discount,1,True,False
+Ten Percent,.10,True,False
+Twenty Percent,.20,True,False

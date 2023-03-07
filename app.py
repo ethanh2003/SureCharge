@@ -22,9 +22,16 @@ sale_items = []
 discounts_Applied = 0
 drawer_record = []
 discount_Record = []
+rewardsAmount = 0
+Company_name = ''
+taxAmount = 0
+freeDrinkPoints = 0
+discount_list = []
+freeCustomizationPoints = 0
 screens = []
 saved_orders = []
 category_list = []
+customer_list = []
 # Frames for switching screens
 homeScrn = Frame(top)
 saleScrn = Frame(top)
@@ -54,6 +61,19 @@ screens.append(drawerReportScrn)
 
 
 def saveData():
+    with open('csv_files/customers.csv', mode='w', newline='') as customer_file:
+        fieldnames = ['name', 'phoneNumber', 'rewards']
+
+        customer_writer = csv.writer(customer_file)
+        customer_writer.writerow(fieldnames)
+        for customer in customer_list:
+            customer_writer.writerow((customer.name, customer.phoneNumber, customer.rewards))
+    with open('csv_files/config.csv', mode='w', newline='') as config_file:
+        fieldnames = ['rewardsAmount', 'Company_name', 'taxAmount', 'freeDrinkPoints', 'freeCustomizationPoints']
+
+        config_writer = csv.writer(config_file)
+        config_writer.writerow(fieldnames)
+        config_writer.writerow((rewardsAmount, Company_name, taxAmount, freeDrinkPoints, freeCustomizationPoints))
     with open('csv_files/drawer_hist.csv', mode='w', newline='') as drawerHist_file:
         fieldnames = ['startingTotal', 'CashOwed', 'cashSales', 'cardSales', 'Discounts', 'Paidin', 'Paidouts',
                       'Refunds', 'tax', 'ranBy',
@@ -93,15 +113,16 @@ def saveData():
             discounts_writer.writerow((discounts.amount, discounts.type, discounts.employee, discounts.reason))
 
     with open('csv_files/sales_file.csv', mode='w', newline='') as sales_file:
-        fieldnames = ['checkNum', 'date', 'time', 'products', 'user', 'paymentType', 'paymentAmount', 'tax', 'discount']
+        fieldnames = ['checkNum', 'date', 'time', 'products', 'user', 'paymentType', 'paymentAmount', 'tax', 'discount',
+                      'customer_id']
 
         sales_writer = csv.writer(sales_file)
         sales_writer.writerow(fieldnames)
         for sale in sale_records:
             sales_writer.writerow((sale.checkNum, sale.date, sale.time, sale.products, sale.user, sale.paymentType,
-                                   sale.paymentAmount, sale.tax, sale.discount))
+                                   sale.paymentAmount, sale.tax, sale.discount, sale.customer_id))
     with open('csv_files/saved_orders.csv', mode='w', newline='') as saved_orders_file:
-        fieldnames = ['orderTotal', 'Items', 'Date', 'Time', 'user','customerName']
+        fieldnames = ['orderTotal', 'Items', 'Date', 'Time', 'user', 'customerName']
 
         saved_orders_writer = csv.writer(saved_orders_file)
         saved_orders_writer.writerow(fieldnames)
@@ -119,6 +140,50 @@ def saveData():
 
 
 def readData():
+    global rewardsAmount, Company_name, taxAmount, freeDrinkPoints, freeCustomizationPoints
+    with open('csv_files/Customers.csv', 'r') as csvfile:
+        # creating a csv reader object
+        csvreader = csv.reader(csvfile)
+        fields = []
+        rows = []
+        # extracting field names through first row
+        fields = next(csvreader)
+
+        # extracting each data row one by one
+        for row in csvreader:
+            rows.append(row)
+        for row in rows:
+            customer_list.append(Customer(row[0], row[1], row[2]))
+    with open('csv_files/discounts.csv', 'r') as csvfile:
+        # creating a csv reader object
+        csvreader = csv.reader(csvfile)
+        fields = []
+        rows = []
+        # extracting field names through first row
+        fields = next(csvreader)
+
+        # extracting each data row one by one
+        for row in csvreader:
+            rows.append(row)
+        for row in rows:
+            discount_list.append(Discount(row[0], row[1], row[2], row[3]))
+    with open('csv_files/config.csv', 'r') as csvfile:
+        # creating a csv reader object
+        csvreader = csv.reader(csvfile)
+        fields = []
+        rows = []
+        # extracting field names through first row
+        fields = next(csvreader)
+
+        # extracting each data row one by one
+        for row in csvreader:
+            rows.append(row)
+
+            rewardsAmount = row[0]
+            Company_name = row[1]
+            taxAmount = row[2]
+            freeDrinkPoints = row[3]
+            freeCustomizationPoints = row[4]
     with open('csv_files/user_file.csv', 'r') as csvfile:
         # creating a csv reader object
         csvreader = csv.reader(csvfile)
@@ -172,7 +237,7 @@ def readData():
         for row in csvreader:
             rows.append(row)
         for row in rows:
-            sale_records.append(Sale(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]))
+            sale_records.append(Sale(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9]))
     with open('csv_files/saved_orders.csv', 'r') as csvfile:
         # creating a csv reader object
         csvreader = csv.reader(csvfile)
@@ -185,7 +250,7 @@ def readData():
         for row in csvreader:
             rows.append(row)
         for row in rows:
-            saved_orders.append(saveOrder(row[0], row[1], row[2], row[3], row[4],row[5]))
+            saved_orders.append(saveOrder(row[0], row[1], row[2], row[3], row[4], row[5]))
     with open('csv_files/discounts_file.csv', 'r') as csvfile:
         # creating a csv reader object
         csvreader = csv.reader(csvfile)
@@ -226,6 +291,26 @@ readData()
 saveData()
 
 
+def addCustomer():
+    pass  # TODO: implement
+
+
+def editCustomer():
+    pass  # TODO: implement
+
+
+def addRewards():
+    pass  # TODO: implement
+
+
+def redeemRewards():
+    pass  # TODO: implement
+
+
+def refund():
+    pass  # TODO: implement
+
+
 def logout():
     global currentUser
     currentUser = None
@@ -251,7 +336,8 @@ def storeOrder(E1, newWindow):
         for it in sale_items:
             itemList = itemList + '(' + str(it.product_id) + ')'
         saved_orders.append(
-            saveOrder(saleTotal(), itemList, datetime.now().date(), datetime.now().time(), currentUser.name,customerName))
+            saveOrder(saleTotal(), itemList, datetime.now().date(), datetime.now().time(), currentUser.name,
+                      customerName))
         saveData()
         clearSale()
         clear_frame()
@@ -345,9 +431,10 @@ def saleTotal():
     return total
 
 
-def cashSale(total, tax, discount, newWindow):
+def cashSale(total, tax, discount, newWindow, customer_id):
     global currentUser
-
+    if customer_id is None:
+        customer_id = 0
     item_list = ''
     drawer.cashSales = round(float(drawer.cashSales) + total, 2)
     drawer.CashOwed = round(float(drawer.CashOwed) + total, 2)
@@ -358,7 +445,7 @@ def cashSale(total, tax, discount, newWindow):
     sale_records.append(
         Sale(1, datetime.now().date(), datetime.now().time(), item_list, currentUser.name, 'Cash',
              total,
-             tax, discount))
+             tax, discount, customer_id))
     saveData()
     clearSale()
     clear_frame()
@@ -366,8 +453,10 @@ def cashSale(total, tax, discount, newWindow):
     newWindow.destroy()
 
 
-def cardSale(total, tax, discount, newWindow):
+def cardSale(total, tax, discount, newWindow, customer_id):
     global currentUser
+    if customer_id is None:
+        customer_id = 0
     item_list = ''
     drawer.cardSales = round(float(drawer.cardSales) + total, 2)
     drawer.tax = round(float(drawer.tax) + tax, 2)
@@ -377,7 +466,7 @@ def cardSale(total, tax, discount, newWindow):
     sale_records.append(
         Sale(updateCheckNum(), datetime.now().date(), datetime.now().time(), item_list, currentUser.name, 'Card',
              total,
-             tax, discount))
+             tax, discount, customer_id))
     saveData()
     clearSale()
     clear_frame()
@@ -829,31 +918,37 @@ def salesScreen():
     global screens
     clear_frame()
     frames = []
-    def pullOrder(order,newWindow):
+
+    def pullOrder(order, newWindow):
         for prod in product_list:
-            prodid = '('+str(prod.product_id)+')'
+            prodid = '(' + str(prod.product_id) + ')'
             if prodid in order.Items:
                 sale_items.append(prod)
         newWindow.destroy()
         saved_orders.remove(order)
+
     def saveOrderName():
         newWindow = Toplevel(top)
         newWindow.geometry("750x250")
         newWindow.title("Enter name")
-        L1 = Label(newWindow,text='Enter Customer Name')
+        L1 = Label(newWindow, text='Enter Customer Name')
         E1 = Entry(newWindow)
         E1.pack()
         L1.pack()
-        B1 = Button(newWindow,text='Save', command=partial(storeOrder,E1,newWindow))
+        B1 = Button(newWindow, text='Save', command=partial(storeOrder, E1, newWindow))
         B1.pack()
+
     def retrieveSale():
         newWindow = Toplevel(top)
         newWindow.geometry("750x250")
         newWindow.title("Select Order")
         for order in saved_orders:
-            B1 = Button(newWindow,text=('Customer: '+order.customerName+'\n$'+str(order.orderTotal)+'\nDate:'+str(order.Date)+'\nTime:'+str(order.Time)+
-                                        '\nUser:'+str(order.user)),command=partial(pullOrder,order,newWindow))
+            B1 = Button(newWindow, text=(
+                    'Customer: ' + order.customerName + '\n$' + str(order.orderTotal) + '\nDate:' + str(
+                order.Date) + '\nTime:' + str(order.Time) +
+                    '\nUser:' + str(order.user)), command=partial(pullOrder, order, newWindow))
             B1.pack()
+
     def addOpenItem(E1, E2, win, win2):
         amount = E1.get()
         valid = True
@@ -939,7 +1034,7 @@ def salesScreen():
         clr_sale.pack(side=BOTTOM)
         save_sale = Button(menuFrame, text='Save Sale', command=saveOrderName)
         save_sale.pack(side=BOTTOM)
-        retrieve_sale = Button(menuFrame,text='Retrieve Sale', command=retrieveSale)
+        retrieve_sale = Button(menuFrame, text='Retrieve Sale', command=retrieveSale)
         retrieve_sale.pack(side=BOTTOM)
         # clr_sale.grid(row=3, column=3)
         B1 = Button(menuFrame, text='Clock Out', command=clockOut)
@@ -1063,15 +1158,22 @@ def paymentScreen():
             L1.grid(row=0, column=1)
             E1.grid(row=1, column=1)
             Label(newWindow, text="Please select a discount")
-            Emp_Discount = Button(newWindow, text='Employee Discount',
-                                  command=partial(discount, 1.00, 'EmployeeDiscount', E1, False, newWindow))
-            Emp_Discount.grid(row=2, column=0)
-            tenPercent = Button(newWindow, text='10% Off',
-                                command=partial(discount, .10, '10Percent', E1, False, newWindow))
-            tenPercent.grid(row=3, column=0)
-            twentyPercent = Button(newWindow, text='20% Off',
-                                   command=partial(discount, .20, '20Percent', E1, False, newWindow))
-            twentyPercent.grid(row=4, column=0)
+            row = 2
+            for discounts in discount_list:
+                if bool(discounts.managerApproval):
+                    B1 = Button(newWindow, text=discounts.name,
+                                command=partial(discount, float(discounts.amount), discounts.name, E1, discounts.fixed,
+                                                newWindow))
+                    B1.grid(row=row, column=0)
+                    row = row + 1
+        for discounts in discount_list:
+            if not bool(discounts.managerApproval):
+                B1 = Button(newWindow, text=discounts.name,
+                            command=partial(discount, float(discounts.amount), discounts.name, discounts.name, discounts.fixed,
+                                            newWindow))
+                B1.grid(row=row, column=0)
+                row = row+1
+                row = row + 1
             L3 = Label(newWindow, text='Enter Custom Amount:')
             E2 = Entry(newWindow)
             L4 = Label(newWindow, text="Please enter decimal amount for percent")
@@ -1084,8 +1186,6 @@ def paymentScreen():
             customDollar = Button(newWindow, text='Custom Dollar',
                                   command=partial(discount, E2, 'Custom Dollar', E1, True, newWindow))
             customDollar.grid(row=4, column=2)
-        byoc = Button(newWindow, text="BYO Cup", command=partial(discount, .50, 'BYO Cup', 'BYO Cup', True, newWindow))
-        byoc.grid(row=5, column=0)
         warn = Label(newWindow, text='One Discount Per transaction')
         warn.grid(row=5, column=1)
         clear_frame()
@@ -1095,13 +1195,38 @@ def paymentScreen():
         newWindow = Toplevel(top)
         newWindow.geometry("750x250")
         newWindow.title("Tender")
-        Cash = Button(newWindow, text='Cash', command=partial(cashSale, total, tax, discounts_Applied, newWindow))
+        Cash = Button(newWindow, text='Cash', command=partial(cashSale, total, tax, discounts_Applied, newWindow,customer_id))
         Cash.pack()
-        Card = Button(newWindow, text='Card', command=partial(cardSale, total, tax, discounts_Applied, newWindow))
+        Card = Button(newWindow, text='Card', command=partial(cardSale, total, tax, discounts_Applied, newWindow,customer_id))
         Card.pack()
 
+    def searchCustomer(E1, newWindow):
+        for customer in customer_list:
+            if customer.phoneNumber == E1.get():
+                tk.messagebox.showinfo('Added', 'Customer has been added to sale')
+                customer.rewards = float(customer.rewards) + (float(saleTotal()) * float(rewardsAmount))
+                newWindow.destroy()
+            else:
+                tk.messagebox.showwarning('Error', 'Customer Not Found')
+                newWindow.destroy()
+                #TODO: Redirect to add customer screen
+
+    def addCustomerToSale():
+        newWindow = Toplevel(top)
+        newWindow.geometry("750x250")
+        newWindow.title("Tender")
+        L1 = Label(newWindow, text='Enter Customer Id')
+        E1 = Entry(newWindow)
+        B1 = Button(newWindow, text='Search', command=partial(searchCustomer, E1, newWindow))
+        L1.pack()
+        E1.pack()
+        B1.pack()
+
+    customer_id = None
     button = Button(payScrn, text='Home', command=salesScreen)
     button.grid(row=0, column=1)
+    B1 = Button(payScrn, text='Add Customer', command=addCustomerToSale)
+    B1.grid(row=1, column=1)
     payScrn.grid_columnconfigure(2, minsize=10)
     border = Label(payScrn, text='-----------------------')
     border.grid(row=3, column=1)

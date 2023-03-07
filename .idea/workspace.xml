@@ -7,11 +7,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="eae9ad9e-190b-415b-a148-8f94020a8633" name="Changes" comment="Broken Categories">
-      <change afterPath="$PROJECT_DIR$/csv_files/saved_orders.csv" afterDir="false" />
+    <list default="true" id="eae9ad9e-190b-415b-a148-8f94020a8633" name="Changes" comment="Added Save Order Function">
+      <change afterPath="$PROJECT_DIR$/csv_files/Customers.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/csv_files/config.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/csv_files/discounts.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Classes.py" beforeDir="false" afterPath="$PROJECT_DIR$/Classes.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/csv_files/drawer.csv" beforeDir="false" afterPath="$PROJECT_DIR$/csv_files/drawer.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/csv_files/sales_file.csv" beforeDir="false" afterPath="$PROJECT_DIR$/csv_files/sales_file.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,7 +94,9 @@
       <workItem from="1674686798957" duration="16293000" />
       <workItem from="1674751680441" duration="7278000" />
       <workItem from="1674759070951" duration="14743000" />
-      <workItem from="1674928141656" duration="1976000" />
+      <workItem from="1674928141656" duration="2036000" />
+      <workItem from="1674942076860" duration="397000" />
+      <workItem from="1675077610680" duration="2501000" />
     </task>
     <task id="LOCAL-00001" summary="Added classes, implimented saving and reading data.">
       <created>1674487237833</created>
@@ -162,7 +168,14 @@
       <option name="project" value="LOCAL" />
       <updated>1674774032623</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Added Save Order Function">
+      <created>1674930186258</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1674930186258</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -190,12 +203,13 @@
     <MESSAGE value="beutifying" />
     <MESSAGE value="added Drawer" />
     <MESSAGE value="Broken Categories" />
-    <option name="LAST_COMMIT_MESSAGE" value="Broken Categories" />
+    <MESSAGE value="Added Save Order Function" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added Save Order Function" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Team14POS$Classes.coverage" NAME="Classes Coverage Results" MODIFIED="1674755580611" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Team14POS$database.coverage" NAME="database Coverage Results" MODIFIED="1674223648971" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Team14POS$app.coverage" NAME="app Coverage Results" MODIFIED="1674930124269" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Team14POS$app.coverage" NAME="app Coverage Results" MODIFIED="1675080073944" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Team14POS$test.coverage" NAME="test Coverage Results" MODIFIED="1674486351202" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Team14POS$pytest_in_app_py.coverage" NAME="pytest in app.py Coverage Results" MODIFIED="1674503196328" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
