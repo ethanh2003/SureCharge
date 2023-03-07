@@ -29,7 +29,7 @@ freeDrinkPoints = 0
 discount_list = []
 freeCustomizationPoints = 0
 screens = []
-saved_orders = [] //this is a change
+saved_orders = []
 category_list = []
 customer_list = []
 # Frames for switching screens
