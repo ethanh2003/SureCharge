@@ -889,7 +889,7 @@ def editUser(E1, E2, E3, E4, E5, E6, user):
 
 def homeScreen():
     clear_frame()
-    L1 = Label(homeScrn, text="Pin", fg="white", bg="green")
+    L1 = Label(homeScrn, text="Pin", fg="white", bg="blue")
     L1.pack(side=LEFT)
     E1 = Entry(homeScrn)
     E1.pack()
