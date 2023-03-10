@@ -890,7 +890,7 @@ def editUser(E1, E2, E3, E4, E5, E6, user):
 def homeScreen():
     clear_frame()
     L1 = Label(homeScrn, text="Pin")
-    L1.pack(side=LEFT)
+    L1.pack(side=TOP)
     E1 = Entry(homeScrn)
     E1.pack()
     SigninB = tk.Button(homeScrn, text="Sign In", command=partial(signin, E1))
