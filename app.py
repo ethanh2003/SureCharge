@@ -1078,7 +1078,7 @@ def salesScreen():
         # saleScrn.grid(row=row, column=9)
         totalFrame.pack(side=BOTTOM)
         menuFrame.pack(side=TOP)
-        itemsFrame.pack(side=LEFT, pady=10, padx=10, expand=FALSE)
+        itemsFrame.pack(side=TOP, pady=10, padx=10, expand=FALSE)
         salesFrame.pack(side=RIGHT, pady=10, padx=10, expand=FALSE)
         saleScrn.pack()
     else:
