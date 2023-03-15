@@ -25,7 +25,7 @@ class Customer:
         self.rewards = rewards
         self.phoneNumber = phoneNumber
         self.name = name
-class discount:
+class discountList:
     def __init__(self,name,amount,managerRequired,fixed):
         self.fixed = fixed
         self.managerRequired = managerRequired

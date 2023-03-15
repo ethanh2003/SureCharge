@@ -175,7 +175,7 @@ def readData():
         for row in csvreader:
             rows.append(row)
         for row in rows:
-            discount_list.append(Discount(row[0], row[1], row[2], row[3]))
+            discount_list.append(discountList(row[0], row[1], row[2], row[3]))
     with open('csv_files/config.csv', 'r') as csvfile:
         # creating a csv reader object
         csvreader = csv.reader(csvfile)
@@ -940,6 +940,8 @@ def salesScreen():
             if prodid in order.Items:
                 sale_items.append(prod)
         newWindow.destroy()
+        clear_frame()
+        salesScreen()
         saved_orders.remove(order)
     #allows you to add name to saved order
     def saveOrderName():
