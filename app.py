@@ -38,6 +38,8 @@ addCategoryScrn = Frame(top)
 editCategoryScrn = Frame(top)
 selectReportsScrn = Frame(top)
 drawerReportScrn = Frame(top)
+itemSalesReportScrn = Frame(top)
+salesReportScrn = Frame(top)
 
 screens.append(homeScrn)
 screens.append(saleScrn)
@@ -51,6 +53,8 @@ screens.append(addCategoryScrn)
 screens.append(editCategoryScrn)
 screens.append(selectReportsScrn)
 screens.append(drawerReportScrn)
+screens.append(itemSalesReportScrn)
+screens.append(salesReportScrn)
 
 
 def saveData():
@@ -101,7 +105,7 @@ def saveData():
             sales_writer.writerow((sale.checkNum, sale.date, sale.time, sale.products, sale.user, sale.paymentType,
                                    sale.paymentAmount, sale.tax, sale.discount))
     with open('csv_files/saved_orders.csv', mode='w', newline='') as saved_orders_file:
-        fieldnames = ['orderTotal', 'Items', 'Date', 'Time', 'user','customerName']
+        fieldnames = ['orderTotal', 'Items', 'Date', 'Time', 'user', 'customerName']
 
         saved_orders_writer = csv.writer(saved_orders_file)
         saved_orders_writer.writerow(fieldnames)
@@ -116,11 +120,14 @@ def saveData():
         drawer_writer.writerow(fieldnames)
         drawer_writer.writerow((drawer.startingTotal, drawer.CashOwed, drawer.cashSales, drawer.cardSales,
                                 drawer.Discounts, drawer.Paidin, drawer.Paidouts, drawer.Refunds, drawer.tax))
+
+
 def refund():
     global refundMode
     clear_frame()
     salesScreen()
     refundMode = True
+
 
 def readData():
     with open('csv_files/user_file.csv', 'r') as csvfile:
@@ -189,7 +196,7 @@ def readData():
         for row in csvreader:
             rows.append(row)
         for row in rows:
-            saved_orders.append(saveOrder(row[0], row[1], row[2], row[3], row[4],row[5]))
+            saved_orders.append(saveOrder(row[0], row[1], row[2], row[3], row[4], row[5]))
     with open('csv_files/discounts_file.csv', 'r') as csvfile:
         # creating a csv reader object
         csvreader = csv.reader(csvfile)
@@ -255,7 +262,8 @@ def storeOrder(E1, newWindow):
         for it in sale_items:
             itemList = itemList + '(' + str(it.product_id) + ')'
         saved_orders.append(
-            saveOrder(saleTotal(), itemList, datetime.now().date(), datetime.now().time(), currentUser.name,customerName))
+            saveOrder(saleTotal(), itemList, datetime.now().date(), datetime.now().time(), currentUser.name,
+                      customerName))
         saveData()
         clearSale()
         clear_frame()
@@ -347,7 +355,7 @@ def saleTotal():
     for items in sale_items:
         total = float(items.price) + total
     if refundMode:
-        return 0-total
+        return 0 - total
     return total
 
 
@@ -377,7 +385,7 @@ def cashSale(total, tax, discount, newWindow):
     clear_frame()
     salesScreen()
     refundMode = False
-    discounts_Applied=0.0
+    discounts_Applied = 0.0
     newWindow.destroy()
 
 
@@ -547,12 +555,161 @@ def deleteUser(user):
     selectEditUserScreen()
 
 
+def itemsSalesReport():
+    clear_frame()
+    homeButton = Button(itemSalesReportScrn, text='Home', command=salesScreen)
+    homeButton.pack()
+
+    def loadItemSales(productId, E1, E2, item):
+        for button1 in buttonArray:
+            button1.pack_forget()
+        startBox.pack_forget()
+        L1.pack_forget()
+        L2.pack_forget()
+        endBox.pack_forget()
+        startDate = E1.get()
+        endDate = E2.get()
+        if startDate:
+            startDate = datetime.strptime(startDate, '%Y-%m-%d')
+        if endDate:
+            endDate = datetime.strptime(endDate, '%Y-%m-%d')
+        count = 0
+        if not endDate:
+            endDate = datetime.now()
+        for sales in sale_records:
+            date = datetime.strptime(sales.date, '%Y-%m-%d')
+            if "(" + productId + ")" in sales.products:
+                if startDate and endDate:
+                    if startDate <= date <= endDate:
+                        count = count + sales.products.count("(" + productId + ")")
+                else:
+                    count = count + sales.products.count("(" + productId + ")")
+        if startDate and endDate:
+            info = Label(itemSalesReportScrn,
+                         text=item.name + " was sold " + str(count) + " times between " + startDate.strftime(
+                             '%Y-%m-%d') + " and " + endDate.strftime('%Y-%m-%d'))
+        else:
+            info = Label(itemSalesReportScrn,
+                         text=item.name + " was sold " + str(count) + " times total")
+        info.pack()
+        itemSalesReportScrn.pack()
+
+    L1 = Label(itemSalesReportScrn, text="Start Date: (YYYY-MM-DD)")
+    L1.pack()
+    startBox = Entry(itemSalesReportScrn)
+    startBox.pack()
+    L2 = Label(itemSalesReportScrn, text="End Date: (YYYY-MM-DD)")
+    L2.pack()
+    endBox = Entry(itemSalesReportScrn)
+    endBox.pack()
+    buttonArray = []
+    for items in product_list:
+        button = Button(itemSalesReportScrn, text=items.name, command=partial(loadItemSales, items.product_id, startBox,
+                                                                              endBox, items))
+        buttonArray.append(button)
+        button.pack()
+    itemSalesReportScrn.pack()
+
+
+def salesReport():
+    clear_frame()
+    homeButton = Button(salesReportScrn, text='Home', command=salesScreen)
+    homeButton.pack()
+
+    def loadSales(E1, E2):
+        startBox.pack_forget()
+        L1.pack_forget()
+        L2.pack_forget()
+        loadButton.pack_forget()
+        endBox.pack_forget()
+        startDate = E1.get()
+        endDate = E2.get()
+        if not endDate:
+            endDate = datetime.now()
+        if not startDate:
+            startDate = "1900-01-01"
+        if startDate:
+            startDate = datetime.strptime(startDate, '%Y-%m-%d')
+        if endDate:
+            endDate = datetime.strptime(endDate, '%Y-%m-%d')
+        totalSales = 0
+        totalTax = 0
+        totalDiscount = 0
+        totalCardSales = 0
+        totalCashSales = 0
+        totalRefunds = 0
+        for sales in sale_records:
+            date = datetime.strptime(sales.date, '%Y-%m-%d')
+            if startDate and endDate:
+                if startDate <= date <= endDate:
+                    totalSales = totalSales + float(sales.paymentAmount)
+                    totalTax = totalTax + float(sales.tax)
+                    totalDiscount = totalDiscount + float(sales.discount)
+                    if sales.paymentType == 'Card':
+                        totalCardSales = totalCardSales + float(sales.paymentAmount)
+                    else:
+                        totalCashSales = totalCashSales + float(sales.paymentAmount)
+                    if float(sales.paymentAmount) < 0:
+                        totalRefunds = totalRefunds + float(sales.paymentAmount)
+            else:
+                totalSales = totalSales + float(sales.paymentAmount)
+                totalTax = totalTax + float(sales.tax)
+                totalDiscount = totalDiscount + float(sales.discount)
+                if sales.paymentType == 'Card':
+                    totalCardSales = totalCardSales + float(sales.paymentAmount)
+                else:
+                    totalCashSales = totalCashSales + float(sales.paymentAmount)
+                if float(sales.paymentAmount) < 0:
+                    totalRefunds = totalRefunds - float(sales.paymentAmount)
+        if startDate or endDate:
+            totalInfo = Label(salesReportScrn, text="$" + str(round(totalSales, 2)) + " between " + startDate.strftime(
+                '%Y-%m-%d') + " and " + endDate.strftime('%Y-%m-%d'))
+        else:
+            totalInfo = Label(salesReportScrn, text="$" + str(round(totalSales, 2)))
+        totalInfo.pack()
+        taxInfo = Label(salesReportScrn, text="Tax: $" + str(round(totalTax, 2)))
+        taxInfo.pack()
+        discountInfo = Label(salesReportScrn, text="Discounts: $" + str(round(totalDiscount, 2)))
+        discountInfo.pack()
+        cardInfo = Label(salesReportScrn, text="Card Sales: $" + str(round(totalCardSales, 2)))
+        cardInfo.pack()
+        cashInfo = Label(salesReportScrn, text="Cash Sales: $" + str(round(totalCashSales, 2)))
+        cashInfo.pack()
+        refundInfo = Label(salesReportScrn, text="Refunds: -$" + str(round(totalRefunds, 2)))
+        refundInfo.pack()
+        salesReportScrn.pack()
+
+    L1 = Label(salesReportScrn, text="Start Date: (YYYY-MM-DD)")
+    L1.pack()
+    startBox = Entry(salesReportScrn)
+    startBox.pack()
+    L2 = Label(salesReportScrn, text="End Date: (YYYY-MM-DD)")
+    L2.pack()
+    endBox = Entry(salesReportScrn)
+    endBox.pack()
+    loadButton = Button(salesReportScrn, text="Load", command=partial(loadSales, startBox, endBox))
+    loadButton.pack()
+    salesReportScrn.pack()
+
+
 def selectReportsScreen():
     clear_frame()
     button = Button(selectReportsScrn, text='Home', command=salesScreen)
     button.pack()
     drawer_reportButton = Button(selectReportsScrn, text='Drawer Report', command=drawerReport)
     drawer_reportButton.pack()
+    itemSales_reportButton = Button(selectReportsScrn, text='Item Sales Report', command=itemsSalesReport)
+    itemSales_reportButton.pack()
+    Sales_reportButton = Button(selectReportsScrn, text='Sales Report', command=salesReport)
+    Sales_reportButton.pack()
+    Sales_reportButton = Button(selectReportsScrn, text='Discount Report', command=homeScreen)  # TODO: Implement
+    Sales_reportButton.pack()
+    Sales_reportButton = Button(selectReportsScrn, text='Refund Report', command=homeScreen)  # TODO: Implement
+    Sales_reportButton.pack()
+    Sales_reportButton = Button(selectReportsScrn, text='Clocked-in Report', command=homeScreen)  # TODO: Implement
+    Sales_reportButton.pack()
+    Sales_reportButton = Button(selectReportsScrn, text='Labor Report', command=homeScreen)  # TODO: Implement
+    Sales_reportButton.pack()
     selectReportsScrn.pack()
 
 
@@ -852,39 +1009,44 @@ def clearSale():
     salesScreen()
 
 
-
 def salesScreen():
     global currentUser
     global screens
     clear_frame()
     frames = []
-    def pullOrder(order,newWindow):
+
+    def pullOrder(order, newWindow):
         for prod in product_list:
-            prodid = '('+str(prod.product_id)+')'
+            prodid = '(' + str(prod.product_id) + ')'
             if prodid in order.Items:
                 sale_items.append(prod)
         newWindow.destroy()
         saved_orders.remove(order)
         clear_frame()
         salesScreen()
+
     def saveOrderName():
         newWindow = Toplevel(top)
         newWindow.geometry("750x250")
         newWindow.title("Enter name")
-        L1 = Label(newWindow,text='Enter Customer Name')
+        L1 = Label(newWindow, text='Enter Customer Name')
         E1 = Entry(newWindow)
         E1.pack()
         L1.pack()
-        B1 = Button(newWindow,text='Save', command=partial(storeOrder,E1,newWindow))
+        B1 = Button(newWindow, text='Save', command=partial(storeOrder, E1, newWindow))
         B1.pack()
+
     def retrieveSale():
         newWindow = Toplevel(top)
         newWindow.geometry("750x250")
         newWindow.title("Select Order")
         for order in saved_orders:
-            B1 = Button(newWindow,text=('Customer: '+order.customerName+'\n$'+str(order.orderTotal)+'\nDate:'+str(order.Date)+'\nTime:'+str(order.Time)+
-                                        '\nUser:'+str(order.user)),command=partial(pullOrder,order,newWindow))
+            B1 = Button(newWindow, text=(
+                        'Customer: ' + order.customerName + '\n$' + str(order.orderTotal) + '\nDate:' + str(
+                    order.Date) + '\nTime:' + str(order.Time) +
+                        '\nUser:' + str(order.user)), command=partial(pullOrder, order, newWindow))
             B1.pack()
+
     def addOpenItem(E1, E2, win, win2):
         amount = E1.get()
         valid = True
@@ -973,7 +1135,7 @@ def salesScreen():
             refund_sale.pack(side=BOTTOM)
         save_sale = Button(menuFrame, text='Save Sale', command=saveOrderName)
         save_sale.pack(side=BOTTOM)
-        retrieve_sale = Button(menuFrame,text='Retrieve Sale', command=retrieveSale)
+        retrieve_sale = Button(menuFrame, text='Retrieve Sale', command=retrieveSale)
         retrieve_sale.pack(side=BOTTOM)
         # clr_sale.grid(row=3, column=3)
         B1 = Button(menuFrame, text='Clock Out', command=clockOut)
@@ -1062,7 +1224,6 @@ def addUser():
 
 
 def discount(amount, discountType, E1, fixed, newWindow):
-
     if type(E1) is Entry:
         reason = E1.get()
     else:
@@ -1083,7 +1244,7 @@ def discount(amount, discountType, E1, fixed, newWindow):
         else:
             discountAmount = amount
         discounts_Applied = discountAmount
-        drawer.Discounts=float(drawer.Discounts)+discountAmount
+        drawer.Discounts = float(drawer.Discounts) + discountAmount
         discount_Record.append(Discount(discountAmount, discountType, currentUser.name, reason))
         clear_frame()
         newWindow.destroy()
