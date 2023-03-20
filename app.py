@@ -118,6 +118,8 @@ def saveData():
                                 drawer.Discounts, drawer.Paidin, drawer.Paidouts, drawer.Refunds, drawer.tax))
 def refund():
     global refundMode
+    clear_frame()
+    salesScreen()
     refundMode = True
 
 def readData():
@@ -966,8 +968,9 @@ def salesScreen():
             # menubutton.grid(row=0, column=0)
         clr_sale = Button(menuFrame, text='Clear Sale', command=clearSale)
         clr_sale.pack(side=BOTTOM)
-        refund_sale = Button(menuFrame, text='Refund Sale', command=refund)
-        refund_sale.pack(side=BOTTOM)
+        if not sale_items and currentUser.accessLevel == '0':
+            refund_sale = Button(menuFrame, text='Refund Sale', command=refund)
+            refund_sale.pack(side=BOTTOM)
         save_sale = Button(menuFrame, text='Save Sale', command=saveOrderName)
         save_sale.pack(side=BOTTOM)
         retrieve_sale = Button(menuFrame,text='Retrieve Sale', command=retrieveSale)
@@ -992,7 +995,11 @@ def salesScreen():
                 row = 4
         row = 4
         for items in sale_items:
-            L1 = Label(salesFrame, text=(items.name + ' $' + items.price))
+            if not refundMode:
+                L1 = Label(salesFrame, text=(items.name + ' $' + items.price))
+            else:
+                L1 = Label(salesFrame, text=(items.name + ' -$' + items.price))
+
             # L1.pack(side=RIGHT)
             L1.grid(row=row, column=1)
             B1 = Button(salesFrame, text="Remove", command=(partial(removeFromSale, items, 0)))
