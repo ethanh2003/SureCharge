@@ -1,2 +1,6 @@
 startingTotal,CashOwed,cashSales,cardSales,Discounts,Paidin,Paidouts,Refunds,tax
+<<<<<<< HEAD
 300.01,7.21,7.21,0,0,0,0,0,0.47
+=======
+300.01,1.18,1.18,3.62,2.375,0,0,0,0.32
+>>>>>>> new
