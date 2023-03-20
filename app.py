@@ -347,12 +347,13 @@ def saleTotal():
 
 def cashSale(total, tax, discount, newWindow):
     global currentUser
+    global discounts_Applied
 
     item_list = ''
     drawer.cashSales = round(float(drawer.cashSales) + total, 2)
     drawer.CashOwed = round(float(drawer.CashOwed) + total, 2)
     drawer.tax = round(float(drawer.tax) + tax, 2)
-    drawer.discount = round(float(drawer.Discounts) + discount, 2)
+    drawer.discount = round(float(drawer.Discounts) + discounts_Applied, 2)
     for items in sale_items:
         item_list = item_list + "(" + str(items.product_id) + ") "
     sale_records.append(
@@ -368,10 +369,11 @@ def cashSale(total, tax, discount, newWindow):
 
 def cardSale(total, tax, discount, newWindow):
     global currentUser
+    global discounts_Applied
     item_list = ''
     drawer.cardSales = round(float(drawer.cardSales) + total, 2)
     drawer.tax = round(float(drawer.tax) + tax, 2)
-    drawer.discount = round(float(drawer.Discounts) + discount, 2)
+    drawer.discount = round(float(drawer.Discounts) + discounts_Applied, 2)
     for items in sale_items:
         item_list = item_list + "(" + str(items.product_id) + ") "
     sale_records.append(
@@ -1024,6 +1026,7 @@ def addUser():
 
 
 def discount(amount, discountType, E1, fixed, newWindow):
+
     if type(E1) is Entry:
         reason = E1.get()
     else:
@@ -1044,6 +1047,7 @@ def discount(amount, discountType, E1, fixed, newWindow):
         else:
             discountAmount = amount
         discounts_Applied = discountAmount
+        drawer.Discounts=float(drawer.Discounts)+discountAmount
         discount_Record.append(Discount(discountAmount, discountType, currentUser.name, reason))
         clear_frame()
         newWindow.destroy()

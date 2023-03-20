@@ -13,3 +13,7 @@ amount,type,employee,reason
 0.5,BYO Cup,Not Admin,BYO Cup
 0.5,BYO Cup,Not Admin,BYO Cup
 0.5,BYO Cup,Not Admin,BYO Cup
+0.9,Custom Percent,Admin,test
+2.99,EmployeeDiscount,Admin,tes
+2.0,EmployeeDiscount,Admin,tara
+0.375,Custom Percent,Admin,test
