@@ -17,3 +17,6 @@ amount,type,employee,reason
 2.99,EmployeeDiscount,Admin,tes
 2.0,EmployeeDiscount,Admin,tara
 0.375,Custom Percent,Admin,test
+0.29900000000000004,Custom Percent,Admin,MOD
+2.99,Custom Percent,Admin,MOD
+2.99,EmployeeDiscount,Admin,w

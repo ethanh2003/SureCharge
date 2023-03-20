@@ -13,7 +13,7 @@ sale_records = []
 stored_sale = None
 currentUser = None
 drawer = cashDrawer(0, 0, 0, 0, 0, 0, 0, 0, 0)
-
+refundMode = False
 top = tk.Tk()
 top.title("Welcome to SureCharge")
 top.state('zoomed')
@@ -116,7 +116,9 @@ def saveData():
         drawer_writer.writerow(fieldnames)
         drawer_writer.writerow((drawer.startingTotal, drawer.CashOwed, drawer.cashSales, drawer.cardSales,
                                 drawer.Discounts, drawer.Paidin, drawer.Paidouts, drawer.Refunds, drawer.tax))
-
+def refund():
+    global refundMode
+    refundMode = True
 
 def readData():
     with open('csv_files/user_file.csv', 'r') as csvfile:
@@ -342,17 +344,25 @@ def saleTotal():
     total = 0
     for items in sale_items:
         total = float(items.price) + total
+    if refundMode:
+        return 0-total
     return total
 
 
 def cashSale(total, tax, discount, newWindow):
     global currentUser
     global discounts_Applied
-
+    global refundMode
     item_list = ''
-    drawer.cashSales = round(float(drawer.cashSales) + total, 2)
-    drawer.CashOwed = round(float(drawer.CashOwed) + total, 2)
-    drawer.tax = round(float(drawer.tax) + tax, 2)
+    if refundMode:
+        drawer.cashSales = round(float(drawer.cashSales) + total, 2)
+        drawer.CashOwed = round(float(drawer.CashOwed) + total, 2)
+        drawer.tax = round(float(drawer.tax) + tax, 2)
+        drawer.Refunds = round(float(drawer.Refunds) + total, 2)
+    else:
+        drawer.cashSales = round(float(drawer.cashSales) + total, 2)
+        drawer.CashOwed = round(float(drawer.CashOwed) + total, 2)
+        drawer.tax = round(float(drawer.tax) + tax, 2)
     drawer.discount = round(float(drawer.Discounts) + discounts_Applied, 2)
     for items in sale_items:
         item_list = item_list + "(" + str(items.product_id) + ") "
@@ -364,15 +374,23 @@ def cashSale(total, tax, discount, newWindow):
     clearSale()
     clear_frame()
     salesScreen()
+    refundMode = False
+    discounts_Applied=0.0
     newWindow.destroy()
 
 
 def cardSale(total, tax, discount, newWindow):
     global currentUser
     global discounts_Applied
+    global refundMode
     item_list = ''
-    drawer.cardSales = round(float(drawer.cardSales) + total, 2)
-    drawer.tax = round(float(drawer.tax) + tax, 2)
+    if refundMode:
+        drawer.cardSales = round(float(drawer.cashSales) + total, 2)
+        drawer.tax = round(float(drawer.tax) + tax, 2)
+        drawer.Refunds = round(float(drawer.Refunds) + total, 2)
+    else:
+        drawer.cardSales = round(float(drawer.cashSales) + total, 2)
+        drawer.tax = round(float(drawer.tax) + tax, 2)
     drawer.discount = round(float(drawer.Discounts) + discounts_Applied, 2)
     for items in sale_items:
         item_list = item_list + "(" + str(items.product_id) + ") "
@@ -382,6 +400,8 @@ def cardSale(total, tax, discount, newWindow):
              tax, discount))
     saveData()
     clearSale()
+    discounts_Applied = 0.0
+    refundMode = False
     clear_frame()
     newWindow.destroy()
     salesScreen()
@@ -821,9 +841,14 @@ def getCatList():
 
 def clearSale():
     global sale_items
+    global refundMode
+    global discounts_Applied
     sale_items = []
+    discounts_Applied = 0.0
     clear_frame()
+    refundMode = False
     salesScreen()
+
 
 
 def salesScreen():
@@ -838,6 +863,8 @@ def salesScreen():
                 sale_items.append(prod)
         newWindow.destroy()
         saved_orders.remove(order)
+        clear_frame()
+        salesScreen()
     def saveOrderName():
         newWindow = Toplevel(top)
         newWindow.geometry("750x250")
@@ -916,7 +943,7 @@ def salesScreen():
     frames.append(itemsFrame)
     frames.append(menuFrame)
     frames.append(totalFrame)
-
+    global refundMode
     if currentUser.clock_in != '0':
         menubutton = Menubutton(menuFrame, text="Manager Menu")
         menubutton.menu = Menu(menubutton)
@@ -939,6 +966,8 @@ def salesScreen():
             # menubutton.grid(row=0, column=0)
         clr_sale = Button(menuFrame, text='Clear Sale', command=clearSale)
         clr_sale.pack(side=BOTTOM)
+        refund_sale = Button(menuFrame, text='Refund Sale', command=refund)
+        refund_sale.pack(side=BOTTOM)
         save_sale = Button(menuFrame, text='Save Sale', command=saveOrderName)
         save_sale.pack(side=BOTTOM)
         retrieve_sale = Button(menuFrame,text='Retrieve Sale', command=retrieveSale)
@@ -1134,8 +1163,9 @@ def paymentScreen():
     total = round(total, 2)
     Total_Label = Label(payScrn, text=('Total: $' + str(total)))
     Total_Label.grid(row=row + 4, column=1)
-    Discount_Button = Button(payScrn, text="Discounts", command=openDiscountScreen)
-    Discount_Button.grid(row=row + 5, column=1)
+    if not refundMode:
+        Discount_Button = Button(payScrn, text="Discounts", command=openDiscountScreen)
+        Discount_Button.grid(row=row + 5, column=1)
     tender_Button = Button(payScrn, text='Payment', command=openPaymentScreen)
     tender_Button.grid(row=row + 6, column=1)
     payScrn.pack()
