@@ -40,6 +40,7 @@ selectReportsScrn = Frame(top)
 drawerReportScrn = Frame(top)
 itemSalesReportScrn = Frame(top)
 salesReportScrn = Frame(top)
+clockedInReportScrn = Frame(top)
 
 screens.append(homeScrn)
 screens.append(saleScrn)
@@ -55,6 +56,7 @@ screens.append(selectReportsScrn)
 screens.append(drawerReportScrn)
 screens.append(itemSalesReportScrn)
 screens.append(salesReportScrn)
+screens.append(clockedInReportScrn)
 
 
 def saveData():
@@ -692,6 +694,59 @@ def salesReport():
     salesReportScrn.pack()
 
 
+def clockedInReport():
+    clear_frame()
+    homeButton = Button(clockedInReportScrn, text='Home', command=salesScreen)
+    homeButton.pack()
+
+    def editTime(emp):
+        newWindow = Toplevel(top)
+        newWindow.geometry("750x250")
+        newWindow.title("Edit Time")
+        L1 = Label(newWindow, text="Input date and time of employee clock in \n (If it is not correct)")
+        L1.pack()
+        E1 = Entry(newWindow)
+        E1.insert(0, emp.clock_in)
+        E1.pack()
+        L2 = Label(newWindow, text="Input date and time of employee clock Out \n (If it is not correct)")
+        L2.pack()
+        E2 = Entry(newWindow)
+        E2.insert(0, datetime.now().strftime('%Y-%m-%d, %H:%M:%S'))
+        E2.pack()
+        B1 = Button(newWindow, text='Apply', command=partial(clockoutEmp, emp, E1, E2, newWindow))
+        B1.pack()
+
+
+    def clockoutEmp(emp, inTime, outTime, window):
+        inTime = inTime.get()
+        outTime = outTime.get()
+        outTime = datetime.strptime(outTime, '%Y-%m-%d, %H:%M:%S')
+        if str(inTime) != str(emp.clock_in):
+            emp.clock_in = inTime
+        if str(outTime) != datetime.now().strftime('%Y-%m-%d, %H:%M:%S'):
+            clock_in_time = datetime.strptime(emp.clock_in, '%Y-%m-%d, %H:%M:%S')
+            hoursWorked = outTime - clock_in_time
+            hoursWorked = round(hoursWorked.total_seconds() / 3600, 2)
+            emp.hoursWorked = round(hoursWorked + float(emp.hoursWorked), 2)
+            emp.clock_in = '0'
+            saveData()
+            window.destroy()
+            if currentUser == emp:
+                homeScreen()
+            else:
+                salesScreen()
+
+    for employees in user_list:
+        if str(employees.clock_in) != '0':
+            clockintime = datetime.strptime(employees.clock_in, '%Y-%m-%d, %H:%M:%S')
+            L1 = Label(clockedInReportScrn,
+                       text=employees.name + " Has been clocked in since " + clockintime.strftime("%m/%d/%Y, %I:%M %p"))
+            B1 = Button(clockedInReportScrn, text=("Clock out " + employees.name), command=partial(editTime, employees))
+            L1.pack()
+            B1.pack()
+    clockedInReportScrn.pack()
+
+
 def selectReportsScreen():
     clear_frame()
     button = Button(selectReportsScrn, text='Home', command=salesScreen)
@@ -706,7 +761,7 @@ def selectReportsScreen():
     Sales_reportButton.pack()
     Sales_reportButton = Button(selectReportsScrn, text='Refund Report', command=homeScreen)  # TODO: Implement
     Sales_reportButton.pack()
-    Sales_reportButton = Button(selectReportsScrn, text='Clocked-in Report', command=homeScreen)  # TODO: Implement
+    Sales_reportButton = Button(selectReportsScrn, text='Clocked-in Report', command=clockedInReport)  # TODO: Implement
     Sales_reportButton.pack()
     Sales_reportButton = Button(selectReportsScrn, text='Labor Report', command=homeScreen)  # TODO: Implement
     Sales_reportButton.pack()
@@ -1042,9 +1097,9 @@ def salesScreen():
         newWindow.title("Select Order")
         for order in saved_orders:
             B1 = Button(newWindow, text=(
-                        'Customer: ' + order.customerName + '\n$' + str(order.orderTotal) + '\nDate:' + str(
-                    order.Date) + '\nTime:' + str(order.Time) +
-                        '\nUser:' + str(order.user)), command=partial(pullOrder, order, newWindow))
+                    'Customer: ' + order.customerName + '\n$' + str(order.orderTotal) + '\nDate:' + str(
+                order.Date) + '\nTime:' + str(order.Time) +
+                    '\nUser:' + str(order.user)), command=partial(pullOrder, order, newWindow))
             B1.pack()
 
     def addOpenItem(E1, E2, win, win2):
