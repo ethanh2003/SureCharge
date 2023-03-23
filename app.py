@@ -43,6 +43,7 @@ salesReportScrn = Frame(top)
 clockedInReportScrn = Frame(top)
 discountReportScrn = Frame(top)
 refundReportScrn = Frame(top)
+drawerHistReportScrn = Frame(top)
 
 screens.append(homeScrn)
 screens.append(saleScrn)
@@ -61,6 +62,7 @@ screens.append(salesReportScrn)
 screens.append(clockedInReportScrn)
 screens.append(discountReportScrn)
 screens.append(refundReportScrn)
+screens.append(drawerHistReportScrn)
 
 
 def saveData():
@@ -814,7 +816,7 @@ def selectReportsScreen():
     itemSales_reportButton.pack()
     Sales_reportButton = Button(selectReportsScrn, text='Sales Report', command=salesReport)
     Sales_reportButton.pack()
-    Sales_reportButton = Button(selectReportsScrn, text='Discount Report', command=discountReport)  # TODO: Implement
+    Sales_reportButton = Button(selectReportsScrn, text='Discount Report', command=discountReport)
     Sales_reportButton.pack()
     Sales_reportButton = Button(selectReportsScrn, text='Refund Report', command=homeScreen)  # TODO: Implement
     Sales_reportButton.pack()
@@ -822,6 +824,8 @@ def selectReportsScreen():
     Sales_reportButton.pack()
     Sales_reportButton = Button(selectReportsScrn, text='Labor Report', command=homeScreen)  # TODO: Implement
     Sales_reportButton.pack()
+    DrawerHistReportButton = Button(selectReportsScrn, text='Drawer History Report', command=homeScreen)  # TODO: Implement
+    DrawerHistReportButton.pack()
     selectReportsScrn.pack()
 
 
