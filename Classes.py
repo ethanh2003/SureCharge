@@ -44,11 +44,12 @@ class saveOrder:
 
 
 class Discount:
-    def __init__(self, amount, type, employee, reason):
+    def __init__(self, amount, type, employee, reason,date):
         self.amount = amount
         self.type = type
         self.employee = employee
         self.reason = reason
+        self.date = date
 
 
 class cashDrawer:

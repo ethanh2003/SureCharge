@@ -1,22 +1,24 @@
-amount,type,employee,reason
-10.5,EmployeeDiscount,Admin,Test
-4.99,EmployeeDiscount,Admin,test
-2.298,20Percent,Admin,Because
-0.9490000000000001,10Percent,Admin,
-2.0,Custom Dollar,Admin,t
-0.5980000000000001,20Percent,Admin,Emp Error
-3.0,Custom Dollar,Admin,t
-2.298,20Percent,Admin,t
-2.298,20Percent,Admin,tr
-11.49,EmployeeDiscount,Admin,54
-0.5,BYO Cup,Not Admin,BYO Cup
-0.5,BYO Cup,Not Admin,BYO Cup
-0.5,BYO Cup,Not Admin,BYO Cup
-0.5,BYO Cup,Not Admin,BYO Cup
-0.9,Custom Percent,Admin,test
-2.99,EmployeeDiscount,Admin,tes
-2.0,EmployeeDiscount,Admin,tara
-0.375,Custom Percent,Admin,test
-0.29900000000000004,Custom Percent,Admin,MOD
-2.99,Custom Percent,Admin,MOD
-2.99,EmployeeDiscount,Admin,w
+amount,type,employee,reason,date
+10.5,EmployeeDiscount,Admin,Test,03/20/2022 20:10:30
+4.99,EmployeeDiscount,Admin,test,03/20/2022 20:10:30
+2.298,20Percent,Admin,Because,03/20/2022 20:10:30
+0.9490000000000001,10Percent,Admin,te,03/20/2022 20:10:30
+2.0,Custom Dollar,Admin,t,03/20/2022 20:10:30
+0.5980000000000001,20Percent,Admin,Emp Error,03/20/2022 20:10:30
+3.0,Custom Dollar,Admin,t,03/20/2022 20:10:30
+2.298,20Percent,Admin,t,03/20/2022 20:10:30
+2.298,20Percent,Admin,tr,03/20/2022 20:10:30
+11.49,EmployeeDiscount,Admin,54,03/20/2022 20:10:30
+0.5,BYO Cup,Not Admin,BYO Cup,03/20/2022 20:10:30
+0.5,BYO Cup,Not Admin,BYO Cup,03/20/2022 20:10:30
+0.5,BYO Cup,Not Admin,BYO Cup,03/20/2022 20:10:30
+0.5,BYO Cup,Not Admin,BYO Cup,03/20/2022 20:10:30
+0.9,Custom Percent,Admin,test,03/20/2022 20:10:30
+2.99,EmployeeDiscount,Admin,tes,03/20/2022 20:10:30
+2.0,EmployeeDiscount,Admin,tara,03/20/2022 20:10:30
+0.375,Custom Percent,Admin,test,03/20/2022 20:10:30
+0.29900000000000004,Custom Percent,Admin,MOD,03/20/2022 20:10:30
+2.99,Custom Percent,Admin,MOD,03/20/2022 20:10:30
+2.99,EmployeeDiscount,Admin,w,03/20/2022 20:10:30
+2.99,EmployeeDiscount,Admin,tes,03/22/2023 20:10:30
+2.99,EmployeeDiscount,Admin,y,03/22/2023 20:10:30

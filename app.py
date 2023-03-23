@@ -41,6 +41,8 @@ drawerReportScrn = Frame(top)
 itemSalesReportScrn = Frame(top)
 salesReportScrn = Frame(top)
 clockedInReportScrn = Frame(top)
+discountReportScrn = Frame(top)
+refundReportScrn = Frame(top)
 
 screens.append(homeScrn)
 screens.append(saleScrn)
@@ -57,6 +59,8 @@ screens.append(drawerReportScrn)
 screens.append(itemSalesReportScrn)
 screens.append(salesReportScrn)
 screens.append(clockedInReportScrn)
+screens.append(discountReportScrn)
+screens.append(refundReportScrn)
 
 
 def saveData():
@@ -91,12 +95,13 @@ def saveData():
                 (product.product_id, product.name, product.price, product.costToMake, product.disabled,
                  product.groundsUsed, product.milkUsed, product.syrupUsed, product.category))
     with open('csv_files/discounts_file.csv', mode='w', newline='') as discounts_file:
-        fieldnames = ['amount', 'type', 'employee', 'reason']
+        fieldnames = ['amount', 'type', 'employee', 'reason', 'date']
 
         discounts_writer = csv.writer(discounts_file)
         discounts_writer.writerow(fieldnames)
         for discounts in discount_Record:
-            discounts_writer.writerow((discounts.amount, discounts.type, discounts.employee, discounts.reason))
+            discounts_writer.writerow(
+                (discounts.amount, discounts.type, discounts.employee, discounts.reason, discounts.date))
 
     with open('csv_files/sales_file.csv', mode='w', newline='') as sales_file:
         fieldnames = ['checkNum', 'date', 'time', 'products', 'user', 'paymentType', 'paymentAmount', 'tax', 'discount']
@@ -211,7 +216,7 @@ def readData():
         for row in csvreader:
             rows.append(row)
         for row in rows:
-            discount_Record.append(Discount(row[0], row[1], row[2], row[3]))
+            discount_Record.append(Discount(row[0], row[1], row[2], row[3], row[4]))
     with open('csv_files/drawer.csv') as csvfile:
         # creating a csv reader object
         csvreader = csv.reader(csvfile)
@@ -716,7 +721,6 @@ def clockedInReport():
         B1 = Button(newWindow, text='Apply', command=partial(clockoutEmp, emp, E1, E2, newWindow))
         B1.pack()
 
-
     def clockoutEmp(emp, inTime, outTime, window):
         inTime = inTime.get()
         outTime = outTime.get()
@@ -747,6 +751,59 @@ def clockedInReport():
     clockedInReportScrn.pack()
 
 
+def discountReport():
+    clear_frame()
+    homeButton = Button(discountReportScrn, text='Home', command=salesScreen)
+    homeButton.pack()
+
+    def loadDiscounts(E1, E2):
+        startBox.pack_forget()
+        L1.pack_forget()
+        L2.pack_forget()
+        B1.pack_forget()
+        endBox.pack_forget()
+        startDate = E1.get()
+        endDate = E2.get()
+        if not startDate:
+            startDate = "1900-01-01"
+        if startDate:
+            startDate = datetime.strptime(startDate, '%Y-%m-%d')
+        if endDate:
+            endDate = datetime.strptime(endDate, '%Y-%m-%d')
+        if not endDate:
+            endDate = datetime.now()
+        h = Scrollbar(discountReportScrn, orient='vertical')
+        info = Text(discountReportScrn, font=('Helvetica', 10, 'bold'), yscrollcommand=h.set,width=300,height=300)
+        info.grid_columnconfigure(0, weight=1)
+        info.tag_configure("tag", justify='center')
+        info.tag_add("tag", "end")
+        for discounts in discount_Record:
+            date = datetime.strptime(discounts.date, '%m/%d/%Y %H:%M:%S')
+            if startDate and endDate:
+                if startDate <= date <= endDate:
+                    info.insert(END, "Amount: " + str(
+                        round(float(discounts.amount), 2)) + " \nType: " + discounts.type + " \nEmployee: " +
+                                discounts.employee + " \nReason: " + discounts.reason + " \nDate: " + date.strftime(
+                        "%m/%d/%Y, %I:%M:%S %p")+"\n")
+                    info.insert(END,"-------------------------------------------------------------------------------------\n")
+
+        info.pack()
+        h.pack(side=RIGHT, fill=Y)
+        discountReportScrn.pack()
+
+    L1 = Label(discountReportScrn, text="Start Date: (YYYY-MM-DD)")
+    L1.pack()
+    startBox = Entry(discountReportScrn)
+    startBox.pack()
+    L2 = Label(discountReportScrn, text="End Date: (YYYY-MM-DD)")
+    L2.pack()
+    endBox = Entry(discountReportScrn)
+    endBox.pack()
+    B1 = Button(discountReportScrn, text="Run Report", command=partial(loadDiscounts, startBox, endBox))
+    B1.pack()
+    discountReportScrn.pack()
+
+
 def selectReportsScreen():
     clear_frame()
     button = Button(selectReportsScrn, text='Home', command=salesScreen)
@@ -757,11 +814,11 @@ def selectReportsScreen():
     itemSales_reportButton.pack()
     Sales_reportButton = Button(selectReportsScrn, text='Sales Report', command=salesReport)
     Sales_reportButton.pack()
-    Sales_reportButton = Button(selectReportsScrn, text='Discount Report', command=homeScreen)  # TODO: Implement
+    Sales_reportButton = Button(selectReportsScrn, text='Discount Report', command=discountReport)  # TODO: Implement
     Sales_reportButton.pack()
     Sales_reportButton = Button(selectReportsScrn, text='Refund Report', command=homeScreen)  # TODO: Implement
     Sales_reportButton.pack()
-    Sales_reportButton = Button(selectReportsScrn, text='Clocked-in Report', command=clockedInReport)  # TODO: Implement
+    Sales_reportButton = Button(selectReportsScrn, text='Clocked-in Report', command=clockedInReport)
     Sales_reportButton.pack()
     Sales_reportButton = Button(selectReportsScrn, text='Labor Report', command=homeScreen)  # TODO: Implement
     Sales_reportButton.pack()
@@ -1300,7 +1357,8 @@ def discount(amount, discountType, E1, fixed, newWindow):
             discountAmount = amount
         discounts_Applied = discountAmount
         drawer.Discounts = float(drawer.Discounts) + discountAmount
-        discount_Record.append(Discount(discountAmount, discountType, currentUser.name, reason))
+        discount_Record.append(
+            Discount(discountAmount, discountType, currentUser.name, reason, datetime.now().strftime("%m/%d/%Y %H:%M:%S")))
         clear_frame()
         newWindow.destroy()
         paymentScreen()
