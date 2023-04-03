@@ -753,6 +753,69 @@ def clockedInReport():
     clockedInReportScrn.pack()
 
 
+def refundReport():
+    clear_frame()
+    homeButton = Button(refundReportScrn, text='Home', command=salesScreen)
+    homeButton.pack()
+
+    def loadRefunds(E1, E2):
+        startBox.pack_forget()
+        L1.pack_forget()
+        L2.pack_forget()
+        B1.pack_forget()
+        endBox.pack_forget()
+        startDate = E1.get()
+        endDate = E2.get()
+        if not startDate:
+            startDate = "1900-01-01"
+        if startDate:
+            startDate = datetime.strptime(startDate, '%Y-%m-%d')
+        if endDate:
+            endDate = datetime.strptime(endDate, '%Y-%m-%d')
+        if not endDate:
+            endDate = datetime.now()
+        h = Scrollbar(refundReportScrn, orient='vertical')
+        info = Text(refundReportScrn, font=('Helvetica', 10, 'bold'), yscrollcommand=h.set, width=300, height=300)
+        info.grid_columnconfigure(0, weight=1)
+        info.tag_configure("tag", justify='center')
+        info.tag_add("tag", "end")
+        for refunds in sale_records:
+            itemsStr = ""
+            for items in product_list:
+                if items.product_id in refunds.products:
+                    if itemsStr == "":
+                        itemsStr = items.name
+                    else:
+                        itemsStr = itemsStr + ", " + items.name
+            dateOfSale = datetime.strptime(refunds.date, '%Y-%m-%d')
+            timeOfSale = datetime.strptime(refunds.time, '%H:%M:%S.%f')
+
+            if float(refunds.paymentAmount) < 0:
+                if startDate and endDate:
+                    if startDate <= dateOfSale <= endDate:
+                        info.insert(END,
+                                    "Check Number: " + refunds.checkNum + "\nProducts: " + itemsStr + "\nUser" + refunds.user + "\nAmount: " + refunds.paymentAmount + "\nTax: " + refunds.tax + " \nDate: " + dateOfSale.strftime(
+                                        "%m/%d/%Y") + "\nTime: "+timeOfSale.strftime('%I:%M:%S %p') + "\n")
+                        info.insert(END,
+                                    "-------------------------------------------------------------------------------------\n")
+
+        info.pack()
+        h.pack(side=RIGHT, fill=Y)
+        discountReportScrn.pack()
+
+    L1 = Label(refundReportScrn, text="Start Date: (YYYY-MM-DD)")
+    L1.pack()
+    startBox = Entry(refundReportScrn)
+    startBox.pack()
+    L2 = Label(refundReportScrn, text="End Date: (YYYY-MM-DD)")
+    L2.pack()
+    endBox = Entry(refundReportScrn)
+    endBox.pack()
+    B1 = Button(refundReportScrn, text="Run Report", command=partial(loadRefunds, startBox, endBox))
+    B1.pack()
+    refundReportScrn.pack()
+
+
 def discountReport():
     clear_frame()
     homeButton = Button(discountReportScrn, text='Home', command=salesScreen)
@@ -775,7 +838,7 @@ def discountReport():
         if not endDate:
             endDate = datetime.now()
         h = Scrollbar(discountReportScrn, orient='vertical')
-        info = Text(discountReportScrn, font=('Helvetica', 10, 'bold'), yscrollcommand=h.set,width=300,height=300)
+        info = Text(discountReportScrn, font=('Helvetica', 10, 'bold'), yscrollcommand=h.set, width=300, height=300)
         info.grid_columnconfigure(0, weight=1)
         info.tag_configure("tag", justify='center')
         info.tag_add("tag", "end")
@@ -786,8 +849,9 @@ def discountReport():
                     info.insert(END, "Amount: " + str(
                         round(float(discounts.amount), 2)) + " \nType: " + discounts.type + " \nEmployee: " +
                                 discounts.employee + " \nReason: " + discounts.reason + " \nDate: " + date.strftime(
-                        "%m/%d/%Y, %I:%M:%S %p")+"\n")
-                    info.insert(END,"-------------------------------------------------------------------------------------\n")
+                        "%m/%d/%Y, %I:%M:%S %p") + "\n")
+                    info.insert(END,
+                                "-------------------------------------------------------------------------------------\n")
 
         info.pack()
         h.pack(side=RIGHT, fill=Y)
@@ -818,13 +882,14 @@ def selectReportsScreen():
     Sales_reportButton.pack()
     Sales_reportButton = Button(selectReportsScrn, text='Discount Report', command=discountReport)
     Sales_reportButton.pack()
-    Sales_reportButton = Button(selectReportsScrn, text='Refund Report', command=homeScreen)  # TODO: Implement
+    Sales_reportButton = Button(selectReportsScrn, text='Refund Report', command=refundReport)
     Sales_reportButton.pack()
     Sales_reportButton = Button(selectReportsScrn, text='Clocked-in Report', command=clockedInReport)
     Sales_reportButton.pack()
     Sales_reportButton = Button(selectReportsScrn, text='Labor Report', command=homeScreen)  # TODO: Implement
     Sales_reportButton.pack()
-    DrawerHistReportButton = Button(selectReportsScrn, text='Drawer History Report', command=homeScreen)  # TODO: Implement
+    DrawerHistReportButton = Button(selectReportsScrn, text='Drawer History Report',
+                                    command=homeScreen)  # TODO: Implement
     DrawerHistReportButton.pack()
     selectReportsScrn.pack()
 
@@ -1362,7 +1427,8 @@ def discount(amount, discountType, E1, fixed, newWindow):
         discounts_Applied = discountAmount
         drawer.Discounts = float(drawer.Discounts) + discountAmount
         discount_Record.append(
-            Discount(discountAmount, discountType, currentUser.name, reason, datetime.now().strftime("%m/%d/%Y %H:%M:%S")))
+            Discount(discountAmount, discountType, currentUser.name, reason,
+                     datetime.now().strftime("%m/%d/%Y %H:%M:%S")))
         clear_frame()
         newWindow.destroy()
         paymentScreen()

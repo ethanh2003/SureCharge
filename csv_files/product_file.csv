@@ -12,3 +12,5 @@ product_id,name,price,costToMake,disabled,groundsUsed,milkUsed,syrupUsed,categor
 10,12oz Starbucks Machattio,4.8,1.5,0,0,0,0,Hot Espresso
 11,12oz Cold Brew,3.75,181.25,0,0,,0,Iced Coffee
 12,16oz Cold Brew,4.25,181.25,0,0,,0,Iced Coffee
+13,Vanilla,0.25,.10,0,,,1.25,Syrups
+14,Caramel,0.25,.10,0,,,1.25,Syrups
