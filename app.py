@@ -635,14 +635,15 @@ def salesReport():
         endBox.pack_forget()
         startDate = E1.get()
         endDate = E2.get()
-        if not endDate:
-            endDate = datetime.now()
+
         if not startDate:
             startDate = "1900-01-01"
         if startDate:
             startDate = datetime.strptime(startDate, '%Y-%m-%d')
-        if endDate:
+        if endDate :
             endDate = datetime.strptime(endDate, '%Y-%m-%d')
+        if not endDate:
+            endDate = datetime.now()
         totalSales = 0
         totalTax = 0
         totalDiscount = 0
