@@ -44,7 +44,9 @@ clockedInReportScrn = Frame(top)
 discountReportScrn = Frame(top)
 refundReportScrn = Frame(top)
 drawerHistReportScrn = Frame(top)
+payrollReportScrn = Frame(top)
 
+screens.append(payrollReportScrn)
 screens.append(homeScrn)
 screens.append(saleScrn)
 screens.append(payScrn)
@@ -720,15 +722,23 @@ def clockedInReport():
         E2 = Entry(newWindow)
         E2.insert(0, datetime.now().strftime('%Y-%m-%d, %H:%M:%S'))
         E2.pack()
-        B1 = Button(newWindow, text='Apply', command=partial(clockoutEmp, emp, E1, E2, newWindow))
+        L3 = Label(newWindow, text="Edit total hours worked \n (If it is not correct)")
+        L3.pack()
+        E3 = Entry(newWindow)
+        E3.insert(0, emp.hoursWorked)
+        E3.pack()
+        B1 = Button(newWindow, text='Apply', command=partial(clockoutEmp, emp, E1, E2, newWindow, E3))
         B1.pack()
 
-    def clockoutEmp(emp, inTime, outTime, window):
+    def clockoutEmp(emp, inTime, outTime, window, totalHours):
         inTime = inTime.get()
         outTime = outTime.get()
+        totalHours = totalHours.get()
         outTime = datetime.strptime(outTime, '%Y-%m-%d, %H:%M:%S')
         if str(inTime) != str(emp.clock_in):
             emp.clock_in = inTime
+        if totalHours != emp.hoursWorked:
+            emp.hoursWorked = totalHours
         if str(outTime) != datetime.now().strftime('%Y-%m-%d, %H:%M:%S'):
             clock_in_time = datetime.strptime(emp.clock_in, '%Y-%m-%d, %H:%M:%S')
             hoursWorked = outTime - clock_in_time
@@ -795,7 +805,7 @@ def refundReport():
                     if startDate <= dateOfSale <= endDate:
                         info.insert(END,
                                     "Check Number: " + refunds.checkNum + "\nProducts: " + itemsStr + "\nUser" + refunds.user + "\nAmount: " + refunds.paymentAmount + "\nTax: " + refunds.tax + " \nDate: " + dateOfSale.strftime(
-                                        "%m/%d/%Y") + "\nTime: "+timeOfSale.strftime('%I:%M:%S %p') + "\n")
+                                        "%m/%d/%Y") + "\nTime: " + timeOfSale.strftime('%I:%M:%S %p') + "\n")
                         info.insert(END,
                                     "-------------------------------------------------------------------------------------\n")
 
@@ -870,7 +880,101 @@ def discountReport():
     discountReportScrn.pack()
 
 
+def drawerHistReport():
+    clear_frame()
+    homeButton = Button(drawerHistReportScrn, text='Home', command=salesScreen)
+    homeButton.pack()
+
+    def loadDiscounts(E1, E2):
+        startBox.pack_forget()
+        L1.pack_forget()
+        L2.pack_forget()
+        B1.pack_forget()
+        endBox.pack_forget()
+        startDate = E1.get()
+        endDate = E2.get()
+        if not startDate:
+            startDate = "1900-01-01"
+        if startDate:
+            startDate = datetime.strptime(startDate, '%Y-%m-%d')
+        if endDate:
+            endDate = datetime.strptime(endDate, '%Y-%m-%d')
+        if not endDate:
+            endDate = datetime.now()
+        h = Scrollbar(drawerHistReportScrn, orient='vertical')
+        info = Text(drawerHistReportScrn, font=('Helvetica', 10, 'bold'), yscrollcommand=h.set, width=300, height=300)
+        info.grid_columnconfigure(0, weight=1)
+        info.tag_configure("tag", justify='center')
+        info.tag_add("tag", "end")
+        for hist in drawer_record:
+            date = datetime.strptime(hist.Date, '%Y-%m-%d')
+            time = datetime.strptime(hist.Time, '%H:%M:%S.%f')
+            if startDate and endDate:
+                if startDate <= date <= endDate:
+                    info.insert(END,
+                                "Starting Total: " + hist.startingTotal + "\nCash Owed: " + hist.CashOwed + "\nCash Sales: " + hist.cashSales + "\nCard Sales: " + hist.cardSales + "\nDiscounts: " + hist.Discounts + "\nPaidin: " + hist.Paidin + "\nPaidouts: " + hist.Paidouts + "\nRefunds: "
+                                                                                                                                                                                                                                                                                     "" + hist.Refunds + "\nTax:" + hist.tax + "\nRan By: " + hist.ranBy + "\nTime: " + time.strftime(
+                                    '%I:%M:%S %p') + "\noverShort: " + hist.overShort + " \nDate: " + date.strftime(
+                                    "%m/%d/%Y") + "\n")
+                    info.insert(END,
+                                "-------------------------------------------------------------------------------------\n")
+
+        info.pack()
+        h.pack(side=RIGHT, fill=Y)
+        drawerHistReportScrn.pack()
+
+    L1 = Label(discountReportScrn, text="Start Date: (YYYY-MM-DD)")
+    L1.pack()
+    startBox = Entry(discountReportScrn)
+    startBox.pack()
+    L2 = Label(discountReportScrn, text="End Date: (YYYY-MM-DD)")
+    L2.pack()
+    endBox = Entry(discountReportScrn)
+    endBox.pack()
+    B1 = Button(discountReportScrn, text="Run Report", command=partial(loadDiscounts, startBox, endBox))
+    B1.pack()
+    discountReportScrn.pack()
+
+
+def payrollReport(win):
+    win.destroy()
+    clear_frame()
+    button = Button(payrollReportScrn, text='Home', command=salesScreen)
+    button.pack()
+    arr = []
+    for emp in user_list:
+        if emp.clock_in != '0':
+            clock_in_time = datetime.strptime(emp.clock_in, '%Y-%m-%d, %H:%M:%S')
+            hoursWorked = datetime.now() - clock_in_time
+            hoursWorked = round(hoursWorked.total_seconds() / 3600, 2)
+            emp.hoursWorked = round(hoursWorked + float(emp.hoursWorked), 2)
+            emp.clock_in = '0'
+        file1 = open("Payroll Reports/Payroll " + datetime.now().strftime('%Y-%m-%d, %I-%M-%S %p') + ".txt", "a")  # append mode
+        file1.write(str(emp.name) + " Hours Worked: " + str(emp.hoursWorked) + " Paycheck Amount: " + str(
+            round((float(emp.hoursWorked) * float(emp.payrate)), 2))+ "\n")
+        file1.close()
+        arr.append(str(emp.name) + " Hours Worked: " + str(emp.hoursWorked) + " Paycheck Amount: " + str(
+            round((float(emp.hoursWorked) * float(emp.payrate)), 2))+ "\n")
+        emp.hoursWorked = 0
+    for a in arr:
+        L1 = Label(payrollReportScrn, text=a)
+        L1.pack()
+    payrollReportScrn.pack()
+
+
 def selectReportsScreen():
+    def confirmPayroll():
+        newWindow = Toplevel(top)
+        newWindow.geometry("750x250")
+        newWindow.title("Confirm Payroll")
+        L1 = Label(newWindow, text='Are you sure you want to run payroll? \nthis action can not be undone.\n All '
+                                   'Employees will be clocked out and hours reset.')
+        L1.pack()
+        B1 = Button(newWindow, text="Yes", command=partial(payrollReport, newWindow))
+        B1.pack()
+        B2 = Button(newWindow, text="No", command=newWindow.destroy)
+        B2.pack()
+
     clear_frame()
     button = Button(selectReportsScrn, text='Home', command=salesScreen)
     button.pack()
@@ -882,14 +986,14 @@ def selectReportsScreen():
     Sales_reportButton.pack()
     Sales_reportButton = Button(selectReportsScrn, text='Discount Report', command=discountReport)
     Sales_reportButton.pack()
-    Sales_reportButton = Button(selectReportsScrn, text='Refund Report', command=refundReport)
-    Sales_reportButton.pack()
-    Sales_reportButton = Button(selectReportsScrn, text='Clocked-in Report', command=clockedInReport)
-    Sales_reportButton.pack()
-    Sales_reportButton = Button(selectReportsScrn, text='Labor Report', command=homeScreen)  # TODO: Implement
-    Sales_reportButton.pack()
+    Refund_reportButton = Button(selectReportsScrn, text='Refund Report', command=refundReport)
+    Refund_reportButton.pack()
+    clockin_reportButton = Button(selectReportsScrn, text='Clocked-in Report', command=clockedInReport)
+    clockin_reportButton.pack()
+    payRoll_reportButton = Button(selectReportsScrn, text='Payroll Report', command=confirmPayroll)
+    payRoll_reportButton.pack()
     DrawerHistReportButton = Button(selectReportsScrn, text='Drawer History Report',
-                                    command=homeScreen)  # TODO: Implement
+                                    command=drawerHistReport)
     DrawerHistReportButton.pack()
     selectReportsScrn.pack()
 
@@ -1156,6 +1260,8 @@ def editUser(E1, E2, E3, E4, E5, E6, user):
             user.payrate = payRate
             user.clock_in = clock_in
             user.hoursWorked = hoursWorked
+            if user.name == 'Admin' and user.user_id == '0':
+                user.accessLevel = 0
             saveData()
             salesScreen()
 
@@ -1306,7 +1412,7 @@ def salesScreen():
                                     command=selectReportsScreen)
         menubutton.menu.add_command(label="Inventory Screen",
                                     command=None)  # TODO: Implement
-        if currentUser.accessLevel == '0':
+        if str(currentUser.accessLevel) == '0':
             menubutton.pack(side=TOP)
             # menubutton.grid(row=0, column=0)
         clr_sale = Button(menuFrame, text='Clear Sale', command=clearSale)
