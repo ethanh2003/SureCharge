@@ -4,7 +4,7 @@ import tkinter.messagebox
 from datetime import datetime
 from functools import partial
 from tkinter import *
-
+import sqlite3
 from Classes import *
 
 user_list = []
@@ -67,70 +67,73 @@ screens.append(refundReportScrn)
 screens.append(drawerHistReportScrn)
 
 
-def saveData():
-    with open('csv_files/drawer_hist.csv', mode='w', newline='') as drawerHist_file:
-        fieldnames = ['startingTotal', 'CashOwed', 'cashSales', 'cardSales', 'Discounts', 'Paidin', 'Paidouts',
-                      'Refunds', 'tax', 'ranBy',
-                      'Date', 'Time', 'overShort']
+# def saveData():
+#     with open('csv_files/drawer_hist.csv', mode='w', newline='') as drawerHist_file:
+#         fieldnames = ['startingTotal', 'CashOwed', 'cashSales', 'cardSales', 'Discounts', 'Paidin', 'Paidouts',
+#                       'Refunds', 'tax', 'ranBy',
+#                       'Date', 'Time', 'overShort']
+#
+#         drawerHist_writer = csv.writer(drawerHist_file)
+#         drawerHist_writer.writerow(fieldnames)
+#         for hist in drawer_record:
+#             drawerHist_writer.writerow(
+#                 (hist.startingTotal, hist.CashOwed, hist.cashSales, hist.cardSales, hist.Discounts, hist.Paidin,
+#                  hist.Paidouts, hist.Refunds, hist.tax, hist.ranBy,
+#                  hist.Date, hist.Time, hist.overShort))
+#     with open('csv_files/user_file.csv', mode='w', newline='') as user_file:
+#         fieldnames = ['user_id', 'name', 'pin', 'accessLevel', 'payrate', 'hoursWorked', 'clock-in']
+#
+#         user_writer = csv.writer(user_file)
+#         user_writer.writerow(fieldnames)
+#         for user in user_list:
+#             user_writer.writerow(
+#                 (user.user_id, user.name, user.pin, user.accessLevel, user.payrate, user.hoursWorked, user.clock_in))
+#     with open('csv_files/product_file.csv', mode='w', newline='') as product_file:
+#         fieldnames = ['product_id', 'name', 'price', 'costToMake', 'disabled', 'groundsUsed', 'milkUsed', 'syrupUsed',
+#                       'category']
+#
+#         product_writer = csv.writer(product_file)
+#         product_writer.writerow(fieldnames)
+#         for product in product_list:
+#             product_writer.writerow(
+#                 (product.product_id, product.name, product.price, product.costToMake, product.disabled,
+#                  product.groundsUsed, product.milkUsed, product.syrupUsed, product.category))
+#     with open('csv_files/discounts_file.csv', mode='w', newline='') as discounts_file:
+#         fieldnames = ['amount', 'type', 'employee', 'reason', 'date']
+#
+#         discounts_writer = csv.writer(discounts_file)
+#         discounts_writer.writerow(fieldnames)
+#         for discounts in discount_Record:
+#             discounts_writer.writerow(
+#                 (discounts.amount, discounts.type, discounts.employee, discounts.reason, discounts.date))
+#
+#     with open('csv_files/sales_file.csv', mode='w', newline='') as sales_file:
+#         fieldnames = ['checkNum', 'date', 'time', 'products', 'user', 'paymentType', 'paymentAmount', 'tax', 'discount']
+#
+#         sales_writer = csv.writer(sales_file)
+#         sales_writer.writerow(fieldnames)
+#         for sale in sale_records:
+#             sales_writer.writerow((sale.checkNum, sale.date, sale.time, sale.products, sale.user, sale.paymentType,
+#                                    sale.paymentAmount, sale.tax, sale.discount))
+#     with open('csv_files/saved_orders.csv', mode='w', newline='') as saved_orders_file:
+#         fieldnames = ['orderTotal', 'Items', 'Date', 'Time', 'user', 'customerName']
+#
+#         saved_orders_writer = csv.writer(saved_orders_file)
+#         saved_orders_writer.writerow(fieldnames)
+#         for orders in saved_orders:
+#             saved_orders_writer.writerow((orders.orderTotal, orders.Items, orders.Date, orders.Time, orders.user,
+#                                           orders.customerName))
+#     with open('csv_files/drawer.csv', mode='w', newline='') as drawer_file:
+#         fieldnames = ['startingTotal', 'CashOwed', 'cashSales', 'cardSales', 'Discounts', 'Paidin', 'Paidouts',
+#                       'Refunds', 'tax']
+#
+#         drawer_writer = csv.writer(drawer_file)
+#         drawer_writer.writerow(fieldnames)
+#         drawer_writer.writerow((drawer.startingTotal, drawer.CashOwed, drawer.cashSales, drawer.cardSales,
+#                                 drawer.Discounts, drawer.Paidin, drawer.Paidouts, drawer.Refunds, drawer.tax))
 
-        drawerHist_writer = csv.writer(drawerHist_file)
-        drawerHist_writer.writerow(fieldnames)
-        for hist in drawer_record:
-            drawerHist_writer.writerow(
-                (hist.startingTotal, hist.CashOwed, hist.cashSales, hist.cardSales, hist.Discounts, hist.Paidin,
-                 hist.Paidouts, hist.Refunds, hist.tax, hist.ranBy,
-                 hist.Date, hist.Time, hist.overShort))
-    with open('csv_files/user_file.csv', mode='w', newline='') as user_file:
-        fieldnames = ['user_id', 'name', 'pin', 'accessLevel', 'payrate', 'hoursWorked', 'clock-in']
 
-        user_writer = csv.writer(user_file)
-        user_writer.writerow(fieldnames)
-        for user in user_list:
-            user_writer.writerow(
-                (user.user_id, user.name, user.pin, user.accessLevel, user.payrate, user.hoursWorked, user.clock_in))
-    with open('csv_files/product_file.csv', mode='w', newline='') as product_file:
-        fieldnames = ['product_id', 'name', 'price', 'costToMake', 'disabled', 'groundsUsed', 'milkUsed', 'syrupUsed',
-                      'category']
 
-        product_writer = csv.writer(product_file)
-        product_writer.writerow(fieldnames)
-        for product in product_list:
-            product_writer.writerow(
-                (product.product_id, product.name, product.price, product.costToMake, product.disabled,
-                 product.groundsUsed, product.milkUsed, product.syrupUsed, product.category))
-    with open('csv_files/discounts_file.csv', mode='w', newline='') as discounts_file:
-        fieldnames = ['amount', 'type', 'employee', 'reason', 'date']
-
-        discounts_writer = csv.writer(discounts_file)
-        discounts_writer.writerow(fieldnames)
-        for discounts in discount_Record:
-            discounts_writer.writerow(
-                (discounts.amount, discounts.type, discounts.employee, discounts.reason, discounts.date))
-
-    with open('csv_files/sales_file.csv', mode='w', newline='') as sales_file:
-        fieldnames = ['checkNum', 'date', 'time', 'products', 'user', 'paymentType', 'paymentAmount', 'tax', 'discount']
-
-        sales_writer = csv.writer(sales_file)
-        sales_writer.writerow(fieldnames)
-        for sale in sale_records:
-            sales_writer.writerow((sale.checkNum, sale.date, sale.time, sale.products, sale.user, sale.paymentType,
-                                   sale.paymentAmount, sale.tax, sale.discount))
-    with open('csv_files/saved_orders.csv', mode='w', newline='') as saved_orders_file:
-        fieldnames = ['orderTotal', 'Items', 'Date', 'Time', 'user', 'customerName']
-
-        saved_orders_writer = csv.writer(saved_orders_file)
-        saved_orders_writer.writerow(fieldnames)
-        for orders in saved_orders:
-            saved_orders_writer.writerow((orders.orderTotal, orders.Items, orders.Date, orders.Time, orders.user,
-                                          orders.customerName))
-    with open('csv_files/drawer.csv', mode='w', newline='') as drawer_file:
-        fieldnames = ['startingTotal', 'CashOwed', 'cashSales', 'cardSales', 'Discounts', 'Paidin', 'Paidouts',
-                      'Refunds', 'tax']
-
-        drawer_writer = csv.writer(drawer_file)
-        drawer_writer.writerow(fieldnames)
-        drawer_writer.writerow((drawer.startingTotal, drawer.CashOwed, drawer.cashSales, drawer.cardSales,
-                                drawer.Discounts, drawer.Paidin, drawer.Paidouts, drawer.Refunds, drawer.tax))
 
 
 def refund():
@@ -140,108 +143,266 @@ def refund():
     refundMode = True
 
 
+# def readData():
+#     with open('csv_files/user_file.csv', 'r') as csvfile:
+#         # creating a csv reader object
+#         csvreader = csv.reader(csvfile)
+#         fields = []
+#         rows = []
+#         # extracting field names through first row
+#         fields = next(csvreader)
+#
+#         # extracting each data row one by one
+#         for row in csvreader:
+#             rows.append(row)
+#         for row in rows:
+#             user_list.append(User(row[0], row[1], row[2], row[3], row[4], row[5], row[6]))
+#     with open('csv_files/drawer_hist.csv', 'r') as csvfile:
+#         # creating a csv reader object
+#         csvreader = csv.reader(csvfile)
+#         fields = []
+#         rows = []
+#         # extracting field names through first row
+#         fields = next(csvreader)
+#
+#         # extracting each data row one by one
+#         for row in csvreader:
+#             rows.append(row)
+#         for row in rows:
+#             drawer_record.append(
+#                 DrawerReport(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9],
+#                              row[10], row[11], row[12]))
+#     with open('csv_files/product_file.csv', 'r') as csvfile:
+#         # creating a csv reader object
+#         csvreader = csv.reader(csvfile)
+#         fields = []
+#         rows = []
+#         # extracting field names through first row
+#         fields = next(csvreader)
+#
+#         # extracting each data row one by one
+#         for row in csvreader:
+#             rows.append(row)
+#         for row in rows:
+#             product_list.append(Product(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]))
+#     with open('csv_files/sales_file.csv', 'r') as csvfile:
+#         # creating a csv reader object
+#         csvreader = csv.reader(csvfile)
+#         fields = []
+#         rows = []
+#         # extracting field names through first row
+#         fields = next(csvreader)
+#
+#         # extracting each data row one by one
+#         for row in csvreader:
+#             rows.append(row)
+#         for row in rows:
+#             sale_records.append(Sale(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]))
+#     with open('csv_files/saved_orders.csv', 'r') as csvfile:
+#         # creating a csv reader object
+#         csvreader = csv.reader(csvfile)
+#         fields = []
+#         rows = []
+#         # extracting field names through first row
+#         fields = next(csvreader)
+#
+#         # extracting each data row one by one
+#         for row in csvreader:
+#             rows.append(row)
+#         for row in rows:
+#             saved_orders.append(saveOrder(row[0], row[1], row[2], row[3], row[4], row[5]))
+#     with open('csv_files/discounts_file.csv', 'r') as csvfile:
+#         # creating a csv reader object
+#         csvreader = csv.reader(csvfile)
+#         fields = []
+#         rows = []
+#         # extracting field names through first row
+#         fields = next(csvreader)
+#
+#         # extracting each data row one by one
+#         for row in csvreader:
+#             rows.append(row)
+#         for row in rows:
+#             discount_Record.append(Discount(row[0], row[1], row[2], row[3], row[4]))
+#     with open('csv_files/drawer.csv') as csvfile:
+#         # creating a csv reader object
+#         csvreader = csv.reader(csvfile)
+#         fields = []
+#         rows = []
+#         # extracting field names through first row
+#         fields = next(csvreader)
+#
+#         # extracting each data row one by one
+#         for row in csvreader:
+#             rows.append(row)
+#         for row in rows:
+#             drawer.startingTotal = row[0]
+#             drawer.CashOwed = row[1]
+#             drawer.cashSales = row[2]
+#             drawer.cardSales = row[3]
+#             drawer.Discounts = row[4]
+#             drawer.Paidin = row[5]
+#             drawer.Paidouts = row[6]
+#             drawer.Refunds = row[7]
+#             drawer.tax = row[8]
+
+
+
+
+# Connect to SQLite database
+conn = sqlite3.connect('my_database.db')
+c = conn.cursor()
+
+
+# def createTables():
+#     # Create database schema
+#     c.execute('''CREATE TABLE IF NOT EXISTS drawer_hist
+#                  (startingTotal REAL, CashOwed REAL, cashSales REAL, cardSales REAL, Discounts REAL, Paidin REAL,
+#                   Paidouts REAL, Refunds REAL, tax REAL, ranBy TEXT, Date TEXT, Time TEXT, overShort REAL)''')
+#
+#     c.execute('''CREATE TABLE IF NOT EXISTS user_file
+#                  (user_id INTEGER, name TEXT, pin INTEGER, accessLevel INTEGER, payrate REAL, hoursWorked REAL, clock_in TEXT)''')
+#
+#     c.execute('''CREATE TABLE IF NOT EXISTS product_file
+#                  (product_id INTEGER, name TEXT, price REAL, costToMake REAL, disabled INTEGER, groundsUsed REAL, milkUsed REAL,
+#                   syrupUsed REAL, category TEXT)''')
+#
+#     c.execute('''CREATE TABLE IF NOT EXISTS discounts_file
+#                  (amount REAL, type TEXT, employee TEXT, reason TEXT, date TEXT)''')
+#
+#     c.execute('''CREATE TABLE IF NOT EXISTS sales_file
+#                  (checkNum INTEGER, date TEXT, time TEXT, products TEXT, user TEXT, paymentType TEXT, paymentAmount REAL,
+#                   tax REAL, discount REAL)''')
+#
+#     c.execute('''CREATE TABLE IF NOT EXISTS saved_orders
+#                  (orderTotal REAL, Items TEXT, Date TEXT, Time TEXT, user TEXT, customerName TEXT)''')
+#
+#     c.execute('''CREATE TABLE IF NOT EXISTS drawer
+#                  (startingTotal REAL, CashOwed REAL, cashSales REAL, cardSales REAL, Discounts REAL, Paidin REAL,
+#                   Paidouts REAL, Refunds REAL, tax REAL)''')
+# createTables()
+
+def saveData():
+    cursor = conn.cursor()
+    cursor.execute("DROP TABLE IF EXISTS discount_record")
+    cursor.execute("DROP TABLE IF EXISTS drawer")
+    cursor.execute("DROP TABLE IF EXISTS drawer_hist")
+    cursor.execute("DROP TABLE IF EXISTS product_list")
+    cursor.execute("DROP TABLE IF EXISTS sale_records")
+    cursor.execute("DROP TABLE IF EXISTS saved_orders")
+    cursor.execute("DROP TABLE IF EXISTS user_list")
+
+    # Save drawer history
+    drawerHist_fields = ['startingTotal', 'CashOwed', 'cashSales', 'cardSales', 'Discounts', 'Paidin', 'Paidouts',
+                         'Refunds', 'tax', 'ranBy', 'Date', 'Time', 'overShort']
+
+    cursor.execute(f"CREATE TABLE IF NOT EXISTS drawer_hist ({','.join(drawerHist_fields)});")
+    for hist in drawer_record:
+        cursor.execute(f"INSERT INTO drawer_hist ({','.join(drawerHist_fields)}) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                       (hist.startingTotal, hist.CashOwed, hist.cashSales, hist.cardSales, hist.Discounts, hist.Paidin,
+                        hist.Paidouts, hist.Refunds, hist.tax, hist.ranBy, hist.Date, hist.Time, hist.overShort))
+    conn.commit()
+
+    # Save user list
+    user_fields = ['user_id', 'name', 'pin', 'accessLevel', 'payrate', 'hoursWorked', '`clock-in`']
+    cursor.execute(f"CREATE TABLE IF NOT EXISTS user_list ({','.join(user_fields)});")
+    for user in user_list:
+        cursor.execute(f"INSERT INTO user_list ({','.join(user_fields)}) VALUES (?,?,?,?,?,?,?)",
+                       (user.user_id, user.name, user.pin, user.accessLevel, user.payrate, user.hoursWorked,
+                        user.clock_in))
+    conn.commit()
+
+    # Save product list
+    product_fields = ['product_id', 'name', 'price', 'costToMake', 'disabled', 'groundsUsed', 'milkUsed', 'syrupUsed',
+                      'category']
+    cursor.execute(f"CREATE TABLE IF NOT EXISTS product_list ({','.join(product_fields)});")
+    for product in product_list:
+        cursor.execute(f"INSERT INTO product_list ({','.join(product_fields)}) VALUES (?,?,?,?,?,?,?,?,?)",
+                       (product.product_id, product.name, product.price, product.costToMake, product.disabled,
+                        product.groundsUsed, product.milkUsed, product.syrupUsed, product.category))
+    conn.commit()
+
+    # Save discount record
+    discount_fields = ['amount', 'type', 'employee', 'reason', 'date']
+    cursor.execute(f"CREATE TABLE IF NOT EXISTS discount_record ({','.join(discount_fields)});")
+    for discount in discount_Record:
+        cursor.execute(f"INSERT INTO discount_record ({','.join(discount_fields)}) VALUES (?,?,?,?,?)",
+                       (discount.amount, discount.type, discount.employee, discount.reason, discount.date))
+    conn.commit()
+
+    # Save sale records
+    sale_fields = ['checkNum', 'date', 'time', 'products', 'user', 'paymentType', 'paymentAmount', 'tax', 'discount']
+    cursor.execute(f"CREATE TABLE IF NOT EXISTS sale_records ({','.join(sale_fields)});")
+    for sale in sale_records:
+        cursor.execute(f"INSERT INTO sale_records ({','.join(sale_fields)}) VALUES (?,?,?,?,?,?,?,?,?)",
+                       (sale.checkNum, sale.date, sale.time, sale.products, sale.user, sale.paymentType,
+                        sale.paymentAmount, sale.tax, sale.discount))
+    conn.commit()
+    # Insert data into the tables
+    saved_fields = ['orderTotal', 'Items', 'Date', 'Time', 'user', 'customerName']
+    cursor.execute(f"CREATE TABLE IF NOT EXISTS saved_orders ({','.join(saved_fields)});")
+    for orders in saved_orders:
+        c.execute(
+            'INSERT INTO saved_orders (orderTotal, Items, Date, Time, user, customerName) VALUES (?, ?, ?, ?, ?, ?)',
+            (orders.orderTotal, orders.Items, orders.Date, orders.Time, orders.user, orders.customerName))
+    drawer_fields = ['startingTotal', 'CashOwed', 'cashSales', 'cardSales', 'Discounts', 'Paidin', 'Paidouts', 'Refunds', 'tax']
+    cursor.execute(f"CREATE TABLE IF NOT EXISTS drawer ({','.join(drawer_fields)});")
+    c.execute('INSERT INTO drawer (startingTotal, CashOwed, cashSales, cardSales, Discounts, Paidin, Paidouts, Refunds, tax) \
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+              (drawer.startingTotal, drawer.CashOwed, drawer.cashSales, drawer.cardSales, drawer.Discounts,
+               drawer.Paidin, drawer.Paidouts, drawer.Refunds, drawer.tax))
+
 def readData():
-    with open('csv_files/user_file.csv', 'r') as csvfile:
-        # creating a csv reader object
-        csvreader = csv.reader(csvfile)
-        fields = []
-        rows = []
-        # extracting field names through first row
-        fields = next(csvreader)
+    # Read data from the User table and save to user_list
+    c.execute("SELECT * FROM user_list")
+    rows = c.fetchall()
+    for row in rows:
+        user_list.append(User(row[0], row[1], row[2], row[3], row[4], row[5], row[6]))
 
-        # extracting each data row one by one
-        for row in csvreader:
-            rows.append(row)
-        for row in rows:
-            user_list.append(User(row[0], row[1], row[2], row[3], row[4], row[5], row[6]))
-    with open('csv_files/drawer_hist.csv', 'r') as csvfile:
-        # creating a csv reader object
-        csvreader = csv.reader(csvfile)
-        fields = []
-        rows = []
-        # extracting field names through first row
-        fields = next(csvreader)
+    # Read data from the DrawerReport table and save to drawer_record
+    c.execute("SELECT * FROM drawer_hist")
+    rows = c.fetchall()
+    for row in rows:
+        drawer_record.append(
+            DrawerReport(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10],
+                         row[11], row[12]))
 
-        # extracting each data row one by one
-        for row in csvreader:
-            rows.append(row)
-        for row in rows:
-            drawer_record.append(
-                DrawerReport(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9],
-                             row[10], row[11], row[12]))
-    with open('csv_files/product_file.csv', 'r') as csvfile:
-        # creating a csv reader object
-        csvreader = csv.reader(csvfile)
-        fields = []
-        rows = []
-        # extracting field names through first row
-        fields = next(csvreader)
+    # Read data from the Product table and save to product_list
+    c.execute("SELECT * FROM product_list")
+    rows = c.fetchall()
+    for row in rows:
+        product_list.append(Product(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]))
 
-        # extracting each data row one by one
-        for row in csvreader:
-            rows.append(row)
-        for row in rows:
-            product_list.append(Product(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]))
-    with open('csv_files/sales_file.csv', 'r') as csvfile:
-        # creating a csv reader object
-        csvreader = csv.reader(csvfile)
-        fields = []
-        rows = []
-        # extracting field names through first row
-        fields = next(csvreader)
+    # Read data from the Sale table and save to sale_records
+    c.execute("SELECT * FROM sale_records")
+    rows = c.fetchall()
+    for row in rows:
+        sale_records.append(Sale(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]))
 
-        # extracting each data row one by one
-        for row in csvreader:
-            rows.append(row)
-        for row in rows:
-            sale_records.append(Sale(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]))
-    with open('csv_files/saved_orders.csv', 'r') as csvfile:
-        # creating a csv reader object
-        csvreader = csv.reader(csvfile)
-        fields = []
-        rows = []
-        # extracting field names through first row
-        fields = next(csvreader)
+    # Read data from the SavedOrders table and save to saved_orders
+    c.execute("SELECT * FROM saved_orders")
+    rows = c.fetchall()
+    for row in rows:
+        saved_orders.append(saved_orders(row[0], row[1], row[2], row[3], row[4], row[5]))
 
-        # extracting each data row one by one
-        for row in csvreader:
-            rows.append(row)
-        for row in rows:
-            saved_orders.append(saveOrder(row[0], row[1], row[2], row[3], row[4], row[5]))
-    with open('csv_files/discounts_file.csv', 'r') as csvfile:
-        # creating a csv reader object
-        csvreader = csv.reader(csvfile)
-        fields = []
-        rows = []
-        # extracting field names through first row
-        fields = next(csvreader)
+    # Read data from the Discount table and save to discount_Record
+    c.execute("SELECT * FROM discount_record")
+    rows = c.fetchall()
+    for row in rows:
+        discount_Record.append(Discount(row[0], row[1], row[2], row[3], row[4]))
 
-        # extracting each data row one by one
-        for row in csvreader:
-            rows.append(row)
-        for row in rows:
-            discount_Record.append(Discount(row[0], row[1], row[2], row[3], row[4]))
-    with open('csv_files/drawer.csv') as csvfile:
-        # creating a csv reader object
-        csvreader = csv.reader(csvfile)
-        fields = []
-        rows = []
-        # extracting field names through first row
-        fields = next(csvreader)
-
-        # extracting each data row one by one
-        for row in csvreader:
-            rows.append(row)
-        for row in rows:
-            drawer.startingTotal = row[0]
-            drawer.CashOwed = row[1]
-            drawer.cashSales = row[2]
-            drawer.cardSales = row[3]
-            drawer.Discounts = row[4]
-            drawer.Paidin = row[5]
-            drawer.Paidouts = row[6]
-            drawer.Refunds = row[7]
-            drawer.tax = row[8]
+    # Read data from the Drawer table and save to drawer object
+    c.execute("SELECT * FROM Drawer")
+    row = c.fetchone()
+    drawer.startingTotal = row[0]
+    drawer.CashOwed = row[1]
+    drawer.cashSales = row[2]
+    drawer.cardSales = row[3]
+    drawer.Discounts = row[4]
+    drawer.Paidin = row[5]
+    drawer.Paidouts = row[6]
+    drawer.Refunds = row[7]
+    drawer.tax = row[8]
 
 
 readData()
@@ -640,7 +801,7 @@ def salesReport():
             startDate = "1900-01-01"
         if startDate:
             startDate = datetime.strptime(startDate, '%Y-%m-%d')
-        if endDate :
+        if endDate:
             endDate = datetime.strptime(endDate, '%Y-%m-%d')
         if not endDate:
             endDate = datetime.now()
@@ -950,12 +1111,13 @@ def payrollReport(win):
             hoursWorked = round(hoursWorked.total_seconds() / 3600, 2)
             emp.hoursWorked = round(hoursWorked + float(emp.hoursWorked), 2)
             emp.clock_in = '0'
-        file1 = open("Payroll Reports/Payroll " + datetime.now().strftime('%Y-%m-%d, %I-%M-%S %p') + ".txt", "a")  # append mode
+        file1 = open("Payroll Reports/Payroll " + datetime.now().strftime('%Y-%m-%d, %I-%M-%S %p') + ".txt",
+                     "a")  # append mode
         file1.write(str(emp.name) + " Hours Worked: " + str(emp.hoursWorked) + " Paycheck Amount: " + str(
-            round((float(emp.hoursWorked) * float(emp.payrate)), 2))+ "\n")
+            round((float(emp.hoursWorked) * float(emp.payrate)), 2)) + "\n")
         file1.close()
         arr.append(str(emp.name) + " Hours Worked: " + str(emp.hoursWorked) + " Paycheck Amount: " + str(
-            round((float(emp.hoursWorked) * float(emp.payrate)), 2))+ "\n")
+            round((float(emp.hoursWorked) * float(emp.payrate)), 2)) + "\n")
         emp.hoursWorked = 0
     for a in arr:
         L1 = Label(payrollReportScrn, text=a)
