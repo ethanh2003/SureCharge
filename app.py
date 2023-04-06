@@ -322,7 +322,6 @@ def removeFromSale(product, num):
     global payScrn
     sale_items.remove(product)
     clear_frame()
-    clear_frame()
     if num == 1:
         payScrn.grid_remove()
         paymentScreen()
@@ -790,7 +789,7 @@ def refundReport():
                 if startDate and endDate:
                     if startDate <= dateOfSale <= endDate:
                         info.insert(END,
-                                    "Check Number: " + refunds.checkNum + "\nProducts: " + itemsStr + "\nUser" + refunds.user + "\nAmount: " + refunds.paymentAmount + "\nTax: " + refunds.tax + " \nDate: " + dateOfSale.strftime(
+                                    "Check Number: " + str(refunds.checkNum) + "\nProducts: " + str(itemsStr) + "\nUser" + str(refunds.user) + "\nAmount: " + str(refunds.paymentAmount) + "\nTax: " + str(refunds.tax) + " \nDate: " + dateOfSale.strftime(
                                         "%m/%d/%Y") + "\nTime: " + timeOfSale.strftime('%I:%M:%S %p') + "\n")
                         info.insert(END,
                                     "-------------------------------------------------------------------------------------\n")
