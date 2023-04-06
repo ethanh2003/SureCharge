@@ -344,13 +344,14 @@ def saveData():
     for orders in saved_orders:
         c.execute(
             'INSERT INTO saved_orders (orderTotal, Items, Date, Time, user, customerName) VALUES (?, ?, ?, ?, ?, ?)',
-            (orders.orderTotal, orders.Items, orders.Date, orders.Time, orders.user, orders.customerName))
+            (orders.orderTotal, orders.Items, orders.Date.strftime('%Y-%m-%d'), orders.Time.strftime('%H:%M:%S'), orders.user, orders.customerName))
     drawer_fields = ['startingTotal', 'CashOwed', 'cashSales', 'cardSales', 'Discounts', 'Paidin', 'Paidouts', 'Refunds', 'tax']
     cursor.execute(f"CREATE TABLE IF NOT EXISTS drawer ({','.join(drawer_fields)});")
-    c.execute('INSERT INTO drawer (startingTotal, CashOwed, cashSales, cardSales, Discounts, Paidin, Paidouts, Refunds, tax) \
+    cursor.execute('INSERT INTO drawer (startingTotal, CashOwed, cashSales, cardSales, Discounts, Paidin, Paidouts, Refunds, tax) \
               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
               (drawer.startingTotal, drawer.CashOwed, drawer.cashSales, drawer.cardSales, drawer.Discounts,
                drawer.Paidin, drawer.Paidouts, drawer.Refunds, drawer.tax))
+    conn.commit()
 
 def readData():
     # Read data from the User table and save to user_list
@@ -394,15 +395,28 @@ def readData():
     # Read data from the Drawer table and save to drawer object
     c.execute("SELECT * FROM Drawer")
     row = c.fetchone()
-    drawer.startingTotal = row[0]
-    drawer.CashOwed = row[1]
-    drawer.cashSales = row[2]
-    drawer.cardSales = row[3]
-    drawer.Discounts = row[4]
-    drawer.Paidin = row[5]
-    drawer.Paidouts = row[6]
-    drawer.Refunds = row[7]
-    drawer.tax = row[8]
+    if row is None:
+        tk.messagebox.showwarning('Error', 'The program has experinced an error, please have a manager update the '
+                                           'drawer information') 
+        drawer.startingTotal = 0
+        drawer.CashOwed = 0
+        drawer.cashSales = 0
+        drawer.cardSales = 0
+        drawer.Discounts = 0
+        drawer.Paidin = 0
+        drawer.Paidouts = 0
+        drawer.Refunds = 0
+        drawer.tax = 0
+    else:
+        drawer.startingTotal = row[0]
+        drawer.CashOwed = row[1]
+        drawer.cashSales = row[2]
+        drawer.cardSales = row[3]
+        drawer.Discounts = row[4]
+        drawer.Paidin = row[5]
+        drawer.Paidouts = row[6]
+        drawer.Refunds = row[7]
+        drawer.tax = row[8]
 
 
 readData()
@@ -549,7 +563,7 @@ def cashSale(total, tax, discount, newWindow):
     for items in sale_items:
         item_list = item_list + "(" + str(items.product_id) + ") "
     sale_records.append(
-        Sale(1, datetime.now().date(), datetime.now().time(), item_list, currentUser.name, 'Cash',
+        Sale(1, datetime.now().date().strftime('%Y-%m-%d'), datetime.now().time().strftime('%H:%M:%S.%f'), item_list, currentUser.name, 'Cash',
              total,
              tax, discount))
     saveData()
@@ -577,7 +591,7 @@ def cardSale(total, tax, discount, newWindow):
     for items in sale_items:
         item_list = item_list + "(" + str(items.product_id) + ") "
     sale_records.append(
-        Sale(updateCheckNum(), datetime.now().date(), datetime.now().time(), item_list, currentUser.name, 'Card',
+        Sale(updateCheckNum(), datetime.now().date().strftime('%Y-%m-%d'), datetime.now().time().strftime('%H:%M:%S.%f'), item_list, currentUser.name, 'Card',
              total,
              tax, discount))
     saveData()
@@ -729,6 +743,8 @@ def deleteUser(user):
 
 def itemsSalesReport():
     clear_frame()
+    saveData()
+    readData()
     homeButton = Button(itemSalesReportScrn, text='Home', command=salesScreen)
     homeButton.pack()
 
@@ -785,6 +801,8 @@ def itemsSalesReport():
 
 def salesReport():
     clear_frame()
+    saveData()
+    readData()
     homeButton = Button(salesReportScrn, text='Home', command=salesScreen)
     homeButton.pack()
 
@@ -867,6 +885,8 @@ def salesReport():
 
 def clockedInReport():
     clear_frame()
+    saveData()
+    readData()
     homeButton = Button(clockedInReportScrn, text='Home', command=salesScreen)
     homeButton.pack()
 
@@ -927,6 +947,8 @@ def clockedInReport():
 
 def refundReport():
     clear_frame()
+    saveData()
+    readData()
     homeButton = Button(refundReportScrn, text='Home', command=salesScreen)
     homeButton.pack()
 
@@ -990,6 +1012,8 @@ def refundReport():
 
 def discountReport():
     clear_frame()
+    saveData()
+    readData()
     homeButton = Button(discountReportScrn, text='Home', command=salesScreen)
     homeButton.pack()
 
@@ -1044,6 +1068,8 @@ def discountReport():
 
 def drawerHistReport():
     clear_frame()
+    saveData()
+    readData()
     homeButton = Button(drawerHistReportScrn, text='Home', command=salesScreen)
     homeButton.pack()
 
@@ -1074,10 +1100,10 @@ def drawerHistReport():
             if startDate and endDate:
                 if startDate <= date <= endDate:
                     info.insert(END,
-                                "Starting Total: " + hist.startingTotal + "\nCash Owed: " + hist.CashOwed + "\nCash Sales: " + hist.cashSales + "\nCard Sales: " + hist.cardSales + "\nDiscounts: " + hist.Discounts + "\nPaidin: " + hist.Paidin + "\nPaidouts: " + hist.Paidouts + "\nRefunds: "
-                                                                                                                                                                                                                                                                                     "" + hist.Refunds + "\nTax:" + hist.tax + "\nRan By: " + hist.ranBy + "\nTime: " + time.strftime(
-                                    '%I:%M:%S %p') + "\noverShort: " + hist.overShort + " \nDate: " + date.strftime(
-                                    "%m/%d/%Y") + "\n")
+                                "Starting Total: " + str(hist.startingTotal) + "\nCash Owed: " + str(hist.CashOwed) + "\nCash Sales: " + str(hist.cashSales) + "\nCard Sales: " + str(hist.cardSales) + "\nDiscounts: " + str(hist.Discounts) + "\nPaidin: " + str(hist.Paidin) + "\nPaidouts: " + str(hist.Paidouts) + "\nRefunds: "
+                                                                                                                                                                                                                                                                                     "" + str(hist.Refunds) + "\nTax:" + str(hist.tax) + "\nRan By: " + str(hist.ranBy) + "\nTime: " + str(time.strftime(
+                                    '%I:%M:%S %p')) + "\noverShort: " + str(hist.overShort) + " \nDate: " + str(date.strftime(
+                                    "%m/%d/%Y")) + "\n")
                     info.insert(END,
                                 "-------------------------------------------------------------------------------------\n")
 
@@ -1175,7 +1201,7 @@ def drawerReport():
             drawer_record.append(DrawerReport(drawer.startingTotal, drawer.CashOwed, drawer.cashSales, drawer.cardSales,
                                               drawer.Discounts, drawer.Paidin,
                                               drawer.Paidouts, drawer.Refunds, drawer.tax, currentUser.name,
-                                              datetime.now().date(), datetime.now().time(), overShort))
+                                              datetime.now().date().strftime('%Y-%m-%d'), datetime.now().time().strftime('%H:%M:%S.%f'), overShort))
             drawer.startingTotal = float(inDrawer) - float(drawer.CashOwed)
             drawer.CashOwed = 0
             drawer.tax = 0
