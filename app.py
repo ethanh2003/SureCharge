@@ -65,8 +65,37 @@ screens.append(clockedInReportScrn)
 screens.append(discountReportScrn)
 screens.append(refundReportScrn)
 screens.append(drawerHistReportScrn)
+database_url = ''
+taxPercent = ''
+BusinessName = ''
+BusinessNumber = ''
 
+def saveConfig():
+    with open('config.csv', mode='w', newline='') as config_file:
+        fieldnames = ['database_url','taxPercent','BusinessName','BusinessNumber']
 
+        config_writer = csv.writer(config_file)
+        config_writer.writerow(fieldnames)
+        config_writer.writerow((database_url,taxPercent,BusinessName,BusinessNumber))
+def readConfig():
+    global database_url,taxPercent,BusinessName,BusinessNumber
+    with open('config.csv', 'r') as csvfile:
+            # creating a csv reader object
+            csvreader = csv.reader(csvfile)
+            fields = []
+            rows = []
+            # extracting field names through first row
+            fields = next(csvreader)
+
+            # extracting each data row one by one
+            for row in csvreader:
+                rows.append(row)
+            for row in rows:
+                database_url = row[0]
+                taxPercent = float(row[1])
+                BusinessName = row[2]
+                BusinessNumber = row[3]
+readConfig()
 # def saveData():
 #     with open('csv_files/drawer_hist.csv', mode='w', newline='') as drawerHist_file:
 #         fieldnames = ['startingTotal', 'CashOwed', 'cashSales', 'cardSales', 'Discounts', 'Paidin', 'Paidouts',
@@ -250,7 +279,7 @@ def refund():
 
 
 # Connect to SQLite database
-conn = sqlite3.connect('my_database.db')
+conn = sqlite3.connect(database_url)
 c = conn.cursor()
 
 
@@ -335,7 +364,7 @@ def saveData():
     cursor.execute(f"CREATE TABLE IF NOT EXISTS sale_records ({','.join(sale_fields)});")
     for sale in sale_records:
         cursor.execute(f"INSERT INTO sale_records ({','.join(sale_fields)}) VALUES (?,?,?,?,?,?,?,?,?)",
-                       (sale.checkNum, sale.date, sale.time, sale.products, sale.user, sale.paymentType,
+                       (sale.checkNum, str(sale.date), str(sale.time), sale.products, sale.user, sale.paymentType,
                         sale.paymentAmount, sale.tax, sale.discount))
     conn.commit()
     # Insert data into the tables
@@ -1775,7 +1804,7 @@ def paymentScreen():
     discount_label = Label(payScrn, text=('Discounts: ' + str(round(discounts_Applied, 2))))
     discount_label.grid(row=row + 2, column=1)
     subtotal = subtotal - discounts_Applied
-    tax = subtotal * 0.07
+    tax = subtotal * taxPercent
     tax = round(tax, 2)
     Tax_Label = Label(payScrn, text=('Tax: $' + str(tax)))
     Tax_Label.grid(row=row + 3, column=1)
