@@ -196,7 +196,7 @@ def readData():
     c.execute("SELECT * FROM Drawer")
     row = c.fetchone()
     if row is None:
-        tk.messagebox.showwarning('Error', 'The program has experinced an error, please have a manager update the '
+        tk.messagebox.showwarning('Error', 'The program has experienced an error, please have a manager update the '
                                            'drawer information')
         drawer.startingTotal = 0
         drawer.CashOwed = 0
