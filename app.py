@@ -1,7 +1,7 @@
 import csv
 import tkinter as tk
 import tkinter.messagebox
-from datetime import datetime
+from datetime import datetime, date, time
 from functools import partial
 from tkinter import *
 import sqlite3
@@ -9,7 +9,6 @@ from Classes import *
 import os
 import shutil
 import sqlite3
-import datetime
 
 # set the path to the database file
 db_file = 'my_database.db'
@@ -21,7 +20,7 @@ backup_dir = 'backup'
 date_format = '%Y-%m-%d'
 
 # get today's date
-today = datetime.date.today()
+today = date.today()
 
 # construct the backup filename
 backup_filename = os.path.basename(db_file) + '.' + today.strftime(date_format) + '.bak'
@@ -34,7 +33,7 @@ if os.path.exists(backup_file):
     pass
 else:
     # get the current date
-    date_today = datetime.date.today().strftime('%Y-%m-%d')
+    date_today = date.today().strftime('%Y-%m-%d')
 
     # construct the name of the backup file using the current date
     backup_file_name = f"backup-{date_today}.db"
@@ -52,7 +51,6 @@ refundMode = False
 top = tk.Tk()
 top.title("Welcome to SureCharge")
 top.state('zoomed')
-print(datetime.__file__)
 
 sale_items = []
 discounts_Applied = 0
@@ -190,6 +188,15 @@ def saveData():
 
 
 def readData():
+    global user_list, product_list, sale_records, stored_sale, drawer, drawer_record, discount_Record, saved_orders
+    user_list = []
+    product_list = []
+    sale_records = []
+    stored_sale = None
+    drawer = cashDrawer(0, 0, 0, 0, 0, 0, 0, 0, 0)
+    drawer_record = []
+    discount_Record = []
+    saved_orders = []
     # Read data from the User table and save to user_list
     c.execute("SELECT * FROM user_list")
     rows = c.fetchall()
@@ -274,6 +281,7 @@ def clockOut():
     currentUser.hoursWorked = round(hoursWorked + float(currentUser.hoursWorked), 2)
     currentUser.clock_in = '0'
     saveData()
+    readData()
     homeScreen()
 
 
@@ -284,9 +292,10 @@ def storeOrder(E1, newWindow):
         for it in sale_items:
             itemList = itemList + '(' + str(it.product_id) + ')'
         saved_orders.append(
-            saveOrder(saleTotal(), itemList, datetime.date.today(), datetime.now().strftime("%H:%M:%S"), currentUser.name,
+            saveOrder(saleTotal(), itemList, date.today(), datetime.now(), currentUser.name,
                       customerName))
         saveData()
+        readData()
         clearSale()
         clear_frame()
         newWindow.destroy()
@@ -300,6 +309,7 @@ def clockIn():
     global currentUser
     currentUser.clock_in = datetime.now().strftime("%Y-%m-%d, %H:%M:%S")
     saveData()
+    readData()
     salesScreen()
 
 
@@ -331,6 +341,7 @@ def checkAdmin():
     if not found:
         user_list.append(User(0, 'Admin', 9999, '0', '20', '0', '0'))
         saveData()
+        readData()
 
 
 checkAdmin()
@@ -398,11 +409,13 @@ def cashSale(total, tax, discount, newWindow):
     for items in sale_items:
         item_list = item_list + "(" + str(items.product_id) + ") "
     sale_records.append(
-        Sale(1, datetime.date.today().strftime('%Y-%m-%d'), datetime.time.now().strftime('%H:%M:%S.%f'), item_list,
+        Sale(1, date.today().strftime('%Y-%m-%d'), datetime.now().strftime('%H:%M:%S.%f'), item_list,
              currentUser.name, 'Cash',
              total,
              tax, discount))
     saveData()
+    readData()
+
     clearSale()
     clear_frame()
     salesScreen()
@@ -432,6 +445,8 @@ def cardSale(total, tax, discount, newWindow):
              total,
              tax, discount))
     saveData()
+    readData()
+
     clearSale()
     discounts_Applied = 0.0
     refundMode = False
@@ -481,8 +496,10 @@ def createUser(E1, E2, E3, E4):
         tk.messagebox.showwarning("Invalid Entry", "The pin must be a minimum of 4 digits\nPlease Try Again")
     else:
         if not inUse:
-            user_list.append(User(user_id_, name, pin, accessLevelNum, payRate, 0, 0))
+            user_list.append(User(user_id_, name, pin, accessLevelNum, payRate, 0, '0'))
             saveData()
+            readData()
+
             tk.messagebox.showwarning("Success!", (
                     name + " Was added! \nPin: " + pin + "\nAccessLevel: " + accessLevel + "\nPay Rate:" + payRate))
             addUserScrn.pack_forget()
@@ -575,13 +592,13 @@ def deleteUser(user):
     user_list.remove(user)
     clear_frame()
     saveData()
+    readData()
+
     selectEditUserScreen()
 
 
 def itemsSalesReport():
     clear_frame()
-    saveData()
-    readData()
     homeButton = Button(itemSalesReportScrn, text='Home', command=salesScreen)
     homeButton.pack()
 
@@ -638,8 +655,6 @@ def itemsSalesReport():
 
 def salesReport():
     clear_frame()
-    saveData()
-    readData()
     homeButton = Button(salesReportScrn, text='Home', command=salesScreen)
     homeButton.pack()
 
@@ -722,8 +737,6 @@ def salesReport():
 
 def clockedInReport():
     clear_frame()
-    saveData()
-    readData()
     homeButton = Button(clockedInReportScrn, text='Home', command=salesScreen)
     homeButton.pack()
 
@@ -765,6 +778,8 @@ def clockedInReport():
             emp.hoursWorked = round(hoursWorked + float(emp.hoursWorked), 2)
             emp.clock_in = '0'
             saveData()
+            readData()
+
             window.destroy()
             if currentUser == emp:
                 homeScreen()
@@ -784,8 +799,6 @@ def clockedInReport():
 
 def refundReport():
     clear_frame()
-    saveData()
-    readData()
     homeButton = Button(refundReportScrn, text='Home', command=salesScreen)
     homeButton.pack()
 
@@ -813,7 +826,7 @@ def refundReport():
         for refunds in sale_records:
             itemsStr = ""
             for items in product_list:
-                if items.product_id in refunds.products:
+                if '('+str(items.product_id)+")" in refunds.products:
                     if itemsStr == "":
                         itemsStr = items.name
                     else:
@@ -849,8 +862,6 @@ def refundReport():
 
 def discountReport():
     clear_frame()
-    saveData()
-    readData()
     homeButton = Button(discountReportScrn, text='Home', command=salesScreen)
     homeButton.pack()
 
@@ -905,8 +916,6 @@ def discountReport():
 
 def drawerHistReport():
     clear_frame()
-    saveData()
-    readData()
     homeButton = Button(drawerHistReportScrn, text='Home', command=salesScreen)
     homeButton.pack()
 
@@ -1144,6 +1153,8 @@ def addProduct(E1, E2, E3, E4, E5, E6, E7):  # TODO: app must be rebooted to sho
     product_list.append(
         Product(updateProductId(), name, price, costToMake, 0, milkUsed, groundsUsed, syrupUsed, category))
     saveData()
+    readData()
+
     clear_frame()
     salesScreen()
 
@@ -1250,6 +1261,8 @@ def editProduct(E1, E2, E3, E4, E5, E6, E7, var2, product):
         product.syrupUsed = syrupUsed
         product.category = category
         saveData()
+        readData()
+
         clear_frame()
         salesScreen()
 
@@ -1258,6 +1271,8 @@ def deleteProduct(product):
     global product_list
     product_list.remove(product)
     saveData()
+    readData()
+
     clear_frame()
     salesScreen()
 
@@ -1296,6 +1311,8 @@ def editUser(E1, E2, E3, E4, E5, E6, user):
             if user.name == 'Admin' and user.user_id == '0':
                 user.accessLevel = 0
             saveData()
+            readData()
+
             salesScreen()
 
 
