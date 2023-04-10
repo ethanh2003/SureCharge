@@ -6,6 +6,41 @@ from functools import partial
 from tkinter import *
 import sqlite3
 from Classes import *
+import os
+import shutil
+import sqlite3
+import datetime
+
+# set the path to the database file
+db_file = 'my_database.db'
+
+# set the path to the directory where backups will be stored
+backup_dir = 'backup'
+
+# set the format for the date in the filename
+date_format = '%Y-%m-%d'
+
+# get today's date
+today = datetime.date.today()
+
+# construct the backup filename
+backup_filename = os.path.basename(db_file) + '.' + today.strftime(date_format) + '.bak'
+
+# set the path to the backup file
+backup_file = os.path.join(backup_dir, backup_filename)
+
+# check if a backup file already exists for today
+if os.path.exists(backup_file):
+    pass
+else:
+    # get the current date
+    date_today = datetime.date.today().strftime('%Y-%m-%d')
+
+    # construct the name of the backup file using the current date
+    backup_file_name = f"backup-{date_today}.db"
+
+    # create a backup of the database
+    shutil.copy(db_file, os.path.join(backup_dir, backup_file_name))
 
 user_list = []
 product_list = []
@@ -17,6 +52,7 @@ refundMode = False
 top = tk.Tk()
 top.title("Welcome to SureCharge")
 top.state('zoomed')
+print(datetime.__file__)
 
 sale_items = []
 discounts_Applied = 0
@@ -248,7 +284,7 @@ def storeOrder(E1, newWindow):
         for it in sale_items:
             itemList = itemList + '(' + str(it.product_id) + ')'
         saved_orders.append(
-            saveOrder(saleTotal(), itemList, datetime.now().date(), datetime.now().time(), currentUser.name,
+            saveOrder(saleTotal(), itemList, datetime.date.today(), datetime.now().strftime("%H:%M:%S"), currentUser.name,
                       customerName))
         saveData()
         clearSale()
@@ -362,7 +398,7 @@ def cashSale(total, tax, discount, newWindow):
     for items in sale_items:
         item_list = item_list + "(" + str(items.product_id) + ") "
     sale_records.append(
-        Sale(1, datetime.now().date().strftime('%Y-%m-%d'), datetime.now().time().strftime('%H:%M:%S.%f'), item_list,
+        Sale(1, datetime.date.today().strftime('%Y-%m-%d'), datetime.time.now().strftime('%H:%M:%S.%f'), item_list,
              currentUser.name, 'Cash',
              total,
              tax, discount))
