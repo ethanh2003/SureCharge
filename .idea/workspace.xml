@@ -7,9 +7,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="eae9ad9e-190b-415b-a148-8f94020a8633" name="Changes" comment="Added Save Order Function">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="eae9ad9e-190b-415b-a148-8f94020a8633" name="Changes" comment="fixed bug" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -102,6 +100,7 @@
       <workItem from="1681146382909" duration="929000" />
       <workItem from="1681147430044" duration="1037000" />
       <workItem from="1681165095409" duration="395000" />
+      <workItem from="1681332132492" duration="65000" />
     </task>
     <task id="LOCAL-00001" summary="Added classes, implimented saving and reading data.">
       <created>1674487237833</created>
@@ -180,7 +179,14 @@
       <option name="project" value="LOCAL" />
       <updated>1674930186258</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="fixed bug">
+      <created>1681332187371</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1681332187371</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -209,7 +215,8 @@
     <MESSAGE value="added Drawer" />
     <MESSAGE value="Broken Categories" />
     <MESSAGE value="Added Save Order Function" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added Save Order Function" />
+    <MESSAGE value="fixed bug" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed bug" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Team14POS$Classes.coverage" NAME="Classes Coverage Results" MODIFIED="1674755580611" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
