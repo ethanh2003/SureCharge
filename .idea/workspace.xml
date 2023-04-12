@@ -9,9 +9,6 @@
   <component name="ChangeListManager">
     <list default="true" id="eae9ad9e-190b-415b-a148-8f94020a8633" name="Changes" comment="Added Save Order Function">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backup/backup-2023-04-10.db" beforeDir="false" afterPath="$PROJECT_DIR$/backup/backup-2023-04-10.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/my_database.db" beforeDir="false" afterPath="$PROJECT_DIR$/my_database.db" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -103,7 +100,8 @@
       <workItem from="1680729133323" duration="3956000" />
       <workItem from="1680821255057" duration="326000" />
       <workItem from="1681146382909" duration="929000" />
-      <workItem from="1681147430044" duration="1025000" />
+      <workItem from="1681147430044" duration="1037000" />
+      <workItem from="1681165095409" duration="395000" />
     </task>
     <task id="LOCAL-00001" summary="Added classes, implimented saving and reading data.">
       <created>1674487237833</created>

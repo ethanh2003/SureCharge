@@ -979,7 +979,7 @@ def drawerHistReport():
 def payrollReport(win):
     win.destroy()
     clear_frame()
-    button = Button(payrollReportScrn, text='Home', command=salesScreen)
+    button = Button(payrollReportScrn, text='Home', command=homeScreen)
     button.pack()
     arr = []
     for emp in user_list:
