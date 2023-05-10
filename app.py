@@ -227,7 +227,7 @@ def readData():
     c.execute("SELECT * FROM saved_orders")
     rows = c.fetchall()
     for row in rows:
-        saved_orders.append(saved_orders(row[0], row[1], row[2], row[3], row[4], row[5]))
+        saved_orders.append(saveOrder(row[0], row[1], row[2], row[3], row[4], row[5]))
 
     # Read data from the Discount table and save to discount_Record
     c.execute("SELECT * FROM discount_record")
