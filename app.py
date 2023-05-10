@@ -1319,7 +1319,7 @@ def editUser(E1, E2, E3, E4, E5, E6, user):
 def homeScreen():
     clear_frame()
     L1 = Label(homeScrn, text="Pin")
-    L1.pack(side=LEFT)
+    L1.pack(side=TOP)
     E1 = Entry(homeScrn)
     E1.pack()
     SigninB = tk.Button(homeScrn, text="Sign In", command=partial(signin, E1))
@@ -1520,7 +1520,7 @@ def salesScreen():
         # saleScrn.grid(row=row, column=9)
         totalFrame.pack(side=BOTTOM)
         menuFrame.pack(side=TOP)
-        itemsFrame.pack(side=LEFT, pady=10, padx=10, expand=FALSE)
+        itemsFrame.pack(side=TOP, pady=10, padx=10, expand=FALSE)
         salesFrame.pack(side=RIGHT, pady=10, padx=10, expand=FALSE)
         saleScrn.pack()
     else:
