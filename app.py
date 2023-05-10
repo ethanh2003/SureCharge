@@ -175,7 +175,7 @@ def saveData():
     for orders in saved_orders:
         c.execute(
             'INSERT INTO saved_orders (orderTotal, Items, Date, Time, user, customerName) VALUES (?, ?, ?, ?, ?, ?)',
-            (orders.orderTotal, orders.Items, orders.Date.strftime('%Y-%m-%d'), orders.Time.strftime('%H:%M:%S'),
+            (orders.orderTotal, orders.Items, orders.Date, orders.Time,
              orders.user, orders.customerName))
     drawer_fields = ['startingTotal', 'CashOwed', 'cashSales', 'cardSales', 'Discounts', 'Paidin', 'Paidouts',
                      'Refunds', 'tax']
