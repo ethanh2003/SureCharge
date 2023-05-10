@@ -7,7 +7,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="eae9ad9e-190b-415b-a148-8f94020a8633" name="Changes" comment="fixed bug" />
+    <list default="true" id="eae9ad9e-190b-415b-a148-8f94020a8633" name="Changes" comment="fixed bug">
+      <change beforePath="$PROJECT_DIR$/my_database.db" beforeDir="false" afterPath="$PROJECT_DIR$/my_database.db" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -101,6 +103,7 @@
       <workItem from="1681147430044" duration="1037000" />
       <workItem from="1681165095409" duration="395000" />
       <workItem from="1681332132492" duration="65000" />
+      <workItem from="1683734867235" duration="326000" />
     </task>
     <task id="LOCAL-00001" summary="Added classes, implimented saving and reading data.">
       <created>1674487237833</created>
@@ -221,7 +224,7 @@
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Team14POS$Classes.coverage" NAME="Classes Coverage Results" MODIFIED="1674755580611" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Team14POS$database.coverage" NAME="database Coverage Results" MODIFIED="1674223648971" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Team14POS$app.coverage" NAME="app Coverage Results" MODIFIED="1681148343944" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Team14POS$app.coverage" NAME="app Coverage Results" MODIFIED="1683735162296" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Team14POS$test.coverage" NAME="test Coverage Results" MODIFIED="1674486351202" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Team14POS$pytest_in_app_py.coverage" NAME="pytest in app.py Coverage Results" MODIFIED="1674503196328" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
