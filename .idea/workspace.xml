@@ -8,9 +8,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a546efb8-5b58-4381-b24d-dbf819f7cb83" name="Changes" comment="fixed bug">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backup/backup-2023-05-10.db" beforeDir="false" afterPath="$PROJECT_DIR$/backup/backup-2023-05-10.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/my_database.db" beforeDir="false" afterPath="$PROJECT_DIR$/my_database.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/cb4bad38-6526-4162-994f-b8909414048b.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/cb4bad38-6526-4162-994f-b8909414048b.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,6 +43,10 @@
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "",
+  "associatedIndex": -1
+}]]></component>
   <component name="ProjectId" id="2KamfyIt4KZAh9PwlnAkW6bEsEk" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -55,13 +58,15 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "Main",
     "last_opened_file_path": "C:/GitHub/Team14POS",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "settings.typescriptcompiler"
+    "settings.editor.selected.configurable": "settings.typescriptcompiler",
+    "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
     "DatabaseDriversLRU": [
@@ -109,6 +114,7 @@
       <workItem from="1683734867235" duration="326000" />
       <workItem from="1690980512361" duration="127000" />
       <workItem from="1690981028128" duration="141000" />
+      <workItem from="1692657885981" duration="152000" />
     </task>
     <task id="LOCAL-00001" summary="Added classes, implimented saving and reading data.">
       <created>1674487237833</created>
@@ -225,12 +231,5 @@
     <MESSAGE value="Added Save Order Function" />
     <MESSAGE value="fixed bug" />
     <option name="LAST_COMMIT_MESSAGE" value="fixed bug" />
-  </component>
-  <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Team14POS$Classes.coverage" NAME="Classes Coverage Results" MODIFIED="1674755580611" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Team14POS$database.coverage" NAME="database Coverage Results" MODIFIED="1674223648971" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Team14POS$app.coverage" NAME="app Coverage Results" MODIFIED="1683737245021" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Team14POS$test.coverage" NAME="test Coverage Results" MODIFIED="1674486351202" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Team14POS$pytest_in_app_py.coverage" NAME="pytest in app.py Coverage Results" MODIFIED="1674503196328" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
